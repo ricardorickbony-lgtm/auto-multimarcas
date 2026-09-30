@@ -35,10 +35,56 @@ let filtroAtual = {
 
 function aplicarIdentidadeLoja(config) {
   if (!config) return;
-  // Atualiza título da página e textos principais se houver
-  const elLogo = document.querySelector('header h1, header .tracking-tight');
-  if (elLogo && config.nome) {
-    // Mantém badge PRO se houver
+
+  // Atualiza nome da loja
+  const elBrand = document.getElementById('brand-name');
+  if (elBrand && config.nome) {
+    elBrand.innerHTML = `${config.nome} <span class="text-xs bg-blue-600 text-white font-bold px-1.5 py-0.5 rounded">PRO</span>`;
+  }
+
+  const elFooter = document.getElementById('footer-brand-name');
+  if (elFooter && config.nome) {
+    elFooter.textContent = config.nome;
+  }
+
+  const elShowroom = document.getElementById('showroom-store-name');
+  if (elShowroom && config.nome) {
+    elShowroom.textContent = config.nome;
+  }
+
+  // Endereço no Showroom e Mapa
+  const mapaEnd = document.getElementById('mapa-endereco-texto');
+  if (mapaEnd && config.endereco) {
+    mapaEnd.innerHTML = `${config.endereco}${config.cidade ? ' - ' + config.cidade : ''}`;
+  }
+
+  // Link Rota Maps
+  const queryMaps = encodeURIComponent(`${config.endereco || ''} ${config.cidade || ''}`);
+  const urlMaps = `https://www.google.com/maps/search/?api=1&query=${queryMaps}`;
+  const btnRota = document.getElementById('btn-rota-maps');
+  const pillMaps = document.getElementById('pill-maps-link');
+  if (btnRota && (config.endereco || config.cidade)) btnRota.href = urlMaps;
+  if (pillMaps && (config.endereco || config.cidade)) pillMaps.href = urlMaps;
+
+  // Contatos rápidos (Pills)
+  const pillTelLink = document.getElementById('pill-tel-link');
+  const pillTelLabel = document.getElementById('pill-tel-label');
+  if (pillTelLink && (config.telefone || config.whatsapp)) {
+    const tel = config.telefone || config.whatsapp;
+    pillTelLink.href = `tel:${tel.replace(/\D/g, '')}`;
+    if (pillTelLabel) pillTelLabel.textContent = tel;
+  }
+
+  const pillWaLink = document.getElementById('pill-wa-link');
+  if (pillWaLink && config.whatsapp) {
+    const wa = config.whatsapp.replace(/\D/g, '');
+    const msg = encodeURIComponent(`Olá! Vim pelo site da ${config.nome || 'loja'} e gostaria de falar com um consultor.`);
+    pillWaLink.href = `https://wa.me/${wa}?text=${msg}`;
+  }
+
+  const pillMailLink = document.getElementById('pill-mail-link');
+  if (pillMailLink && config.email) {
+    pillMailLink.href = `mailto:${config.email}`;
   }
 }
 
@@ -95,12 +141,13 @@ function filtrarVeiculos() {
     if (filtroAtual.status === 'disponivel' && carro.status !== 'disponivel') return false;
     if (filtroAtual.status === 'vendido' && carro.status !== 'vendido') return false;
 
-    // Filtro por Termo (Marca, Modelo ou Opcionais)
+    // Filtro por Termo (Marca, Modelo, Cor ou Tags)
     if (filtroAtual.termo) {
       const termoBusca = filtroAtual.termo.toLowerCase();
       const matchTexto = 
         carro.marca.toLowerCase().includes(termoBusca) ||
         carro.modelo.toLowerCase().includes(termoBusca) ||
+        (carro.cor && carro.cor.toLowerCase().includes(termoBusca)) ||
         (carro.tags && carro.tags.some(t => t.toLowerCase().includes(termoBusca)));
       if (!matchTexto) return false;
     }
@@ -110,9 +157,18 @@ function filtrarVeiculos() {
       return false;
     }
 
-    // Filtro por Carroceria
-    if (filtroAtual.carroceria && carro.carroceria.toLowerCase() !== filtroAtual.carroceria.toLowerCase()) {
-      return false;
+    // Filtro por Carroceria / Categoria Especial (ex: luxo)
+    if (filtroAtual.carroceria) {
+      if (filtroAtual.carroceria.toLowerCase() === 'luxo') {
+        const marcasLuxo = ['bmw', 'porsche', 'audi', 'mercedes', 'mercedes-benz', 'volvo', 'land rover', 'jaguar'];
+        const isLuxo = carro.destaque || 
+                       carro.preco >= 180000 || 
+                       marcasLuxo.some(m => carro.marca.toLowerCase().includes(m)) ||
+                       (carro.tags && carro.tags.some(t => t.toLowerCase().includes('luxo') || t.toLowerCase().includes('premium')));
+        if (!isLuxo) return false;
+      } else if (carro.carroceria.toLowerCase() !== filtroAtual.carroceria.toLowerCase()) {
+        return false;
+      }
     }
 
     return true;
@@ -134,11 +190,11 @@ function renderizarEstoque() {
 
   if (veiculosFiltrados.length === 0) {
     container.innerHTML = '';
-    semResultados.classList.remove('hidden');
+    if (semResultados) semResultados.classList.remove('hidden');
     return;
   }
 
-  semResultados.classList.add('hidden');
+  if (semResultados) semResultados.classList.add('hidden');
   container.innerHTML = '';
 
   veiculosFiltrados.forEach(carro => {
@@ -148,8 +204,14 @@ function renderizarEstoque() {
 }
 
 function criarCardCarro(carro) {
+  const isDark = document.documentElement.classList.contains('dark');
   const div = document.createElement('div');
-  div.className = 'car-card bg-white rounded-2xl border border-slate-200 overflow-hidden flex flex-col relative';
+  
+  if (isDark) {
+    div.className = 'luxury-card rounded-2xl overflow-hidden flex flex-col relative text-slate-200';
+  } else {
+    div.className = 'car-card bg-white rounded-2xl border border-slate-200 overflow-hidden flex flex-col relative';
+  }
 
   const precoFormatado = EstoqueDB.formatarPreco(carro.preco);
   const kmFormatado = EstoqueDB.formatarKm(carro.km);
@@ -169,7 +231,9 @@ function criarCardCarro(carro) {
   }
 
   const tagsHtml = (carro.tags || []).slice(0, 2).map(tag => 
-    `<span class="bg-slate-100 text-slate-700 text-[10px] font-semibold px-2 py-0.5 rounded">${tag}</span>`
+    isDark 
+      ? `<span class="bg-white/10 text-amber-300 text-[10px] font-semibold px-2 py-0.5 rounded border border-white/10">${tag}</span>`
+      : `<span class="bg-slate-100 text-slate-700 text-[10px] font-semibold px-2 py-0.5 rounded">${tag}</span>`
   ).join('');
 
   const msgWhatsApp = encodeURIComponent(
@@ -183,7 +247,7 @@ function criarCardCarro(carro) {
 
   div.innerHTML = `
     <!-- Imagem e Badges -->
-    <div class="relative h-52 sm:h-56 w-full bg-slate-100 overflow-hidden">
+    <div class="relative h-52 sm:h-56 w-full bg-slate-900 overflow-hidden">
       <img src="${fotoCapa}" alt="${carro.marca} ${carro.modelo}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105" loading="lazy">
       
       <!-- Badges Superiores -->
@@ -216,45 +280,51 @@ function criarCardCarro(carro) {
           ${tagsHtml}
         </div>
 
-        <h3 class="font-bold text-slate-900 text-base sm:text-lg line-clamp-1" title="${carro.marca} ${carro.modelo}">
+        <h3 class="font-bold ${isDark ? 'text-white' : 'text-slate-900'} text-base sm:text-lg line-clamp-1" title="${carro.marca} ${carro.modelo}">
           ${carro.marca} ${carro.modelo}
         </h3>
-        <p class="text-xs text-slate-500 mt-0.5 font-medium">${carro.cor} • Placa final ${carro.placaFinal}</p>
+        <p class="text-xs ${isDark ? 'text-slate-400' : 'text-slate-500'} mt-0.5 font-medium">${carro.cor} • Placa final ${carro.placaFinal}</p>
+        
+        <!-- Selo de Garantia e Laudo Cautelar Aprovado -->
+        <div class="mt-2.5 inline-flex items-center gap-1.5 ${isDark ? 'bg-amber-500/10 text-amber-300 border border-amber-500/20' : 'bg-emerald-50 text-emerald-700 border border-emerald-100'} text-[10px] font-bold px-2 py-0.5 rounded">
+          <svg class="w-3 h-3 ${isDark ? 'text-amber-400' : 'text-emerald-600'}" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+          <span>Laudo Cautelar 100% Aprovado</span>
+        </div>
       </div>
 
       <!-- Ficha Rápida (4 itens) -->
-      <div class="grid grid-cols-2 gap-2 text-xs text-slate-600 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+      <div class="grid grid-cols-2 gap-2 text-xs ${isDark ? 'text-slate-300 bg-white/5 border border-white/10' : 'text-slate-600 bg-slate-50 border border-slate-100'} p-2.5 rounded-xl">
         <div class="flex items-center gap-1.5">
-          <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+          <svg class="w-3.5 h-3.5 ${isDark ? 'text-amber-400' : 'text-slate-400'}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
           <span>${carro.anoFabricacao}/${carro.anoModelo}</span>
         </div>
         <div class="flex items-center gap-1.5">
-          <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+          <svg class="w-3.5 h-3.5 ${isDark ? 'text-amber-400' : 'text-slate-400'}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
           <span>${kmFormatado}</span>
         </div>
         <div class="flex items-center gap-1.5">
-          <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+          <svg class="w-3.5 h-3.5 ${isDark ? 'text-amber-400' : 'text-slate-400'}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
           <span>${carro.cambio}</span>
         </div>
         <div class="flex items-center gap-1.5">
-          <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+          <svg class="w-3.5 h-3.5 ${isDark ? 'text-amber-400' : 'text-slate-400'}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
           <span>${carro.combustivel}</span>
         </div>
       </div>
 
       <!-- Preço e Botões de Conversão -->
-      <div class="pt-2 border-t border-slate-100 flex items-center justify-between gap-2">
+      <div class="pt-2 border-t ${isDark ? 'border-white/10' : 'border-slate-100'} flex items-center justify-between gap-2">
         <div>
-          <span class="block text-[10px] text-slate-400 font-bold uppercase">Valor à Vista</span>
-          <span class="text-xl font-extrabold text-slate-900">${precoFormatado}</span>
+          <span class="block text-[10px] ${isDark ? 'text-slate-400' : 'text-slate-400'} font-bold uppercase">Valor à Vista</span>
+          <span class="text-xl font-extrabold ${isDark ? 'text-amber-400 font-serif-luxury' : 'text-slate-900'}">${precoFormatado}</span>
         </div>
 
         <div class="flex items-center gap-2">
-          <button data-ver-detalhes="${carro.id}" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded-lg text-xs font-semibold transition" title="Ver Detalhes e Fotos">
+          <button data-ver-detalhes="${carro.id}" class="${isDark ? 'bg-white/10 hover:bg-white/20 text-slate-200 border border-white/10' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'} px-3 py-2 rounded-lg text-xs font-semibold transition" title="Ver Detalhes e Fotos">
             Ver Fotos
           </button>
           ${!isVendido ? `
-            <a href="${linkWhatsApp}" target="_blank" rel="noopener noreferrer" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1 shadow-sm" title="Proposta via WhatsApp">
+            <a href="${linkWhatsApp}" target="_blank" rel="noopener noreferrer" class="${isDark ? 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-bold' : 'bg-emerald-600 hover:bg-emerald-500 text-white font-bold'} px-3 py-2 rounded-lg text-xs transition flex items-center gap-1 shadow-sm" title="Proposta via WhatsApp">
               <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 14.99 3.81 13.47 3.81 11.91C3.81 7.37 7.5 3.67 12.05 3.67Z"/></svg>
               <span>WhatsApp</span>
             </a>
@@ -287,6 +357,11 @@ function configurarEventosFiltros() {
 
   if (btnBuscar) btnBuscar.addEventListener('click', aplicarFiltros);
   if (inputTermo) {
+    let debounceTimer;
+    inputTermo.addEventListener('input', () => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(aplicarFiltros, 200);
+    });
     inputTermo.addEventListener('keyup', (e) => {
       if (e.key === 'Enter') aplicarFiltros();
     });
@@ -294,20 +369,51 @@ function configurarEventosFiltros() {
   if (selectMarca) selectMarca.addEventListener('change', aplicarFiltros);
   if (selectCarroceria) selectCarroceria.addEventListener('change', aplicarFiltros);
 
+  // Filtro por botões de status (Todos / Disponíveis / Vendidos)
   statusBtns.forEach(btn => {
     btn.addEventListener('click', () => {
       statusBtns.forEach(b => {
-        b.classList.remove('bg-slate-900', 'text-white');
+        b.classList.remove('bg-slate-900', 'text-white', 'bg-amber-400', 'text-black');
         b.classList.add('bg-white', 'text-slate-700');
       });
       btn.classList.remove('bg-white', 'text-slate-700');
-      btn.classList.add('bg-slate-900', 'text-white');
+      const isDark = document.documentElement.classList.contains('dark');
+      if (isDark) {
+        btn.classList.add('bg-amber-400', 'text-black');
+      } else {
+        btn.classList.add('bg-slate-900', 'text-white');
+      }
 
       filtroAtual.status = btn.dataset.statusFilter;
       renderizarEstoque();
     });
   });
 
+  // Cards de Categoria em Destaque (Seminovos / SUVs / Importados)
+  const categoryCards = document.querySelectorAll('.category-feature-card');
+  categoryCards.forEach(card => {
+    card.addEventListener('click', () => {
+      const cat = card.dataset.filtroCategoria;
+      filtroAtual.carroceria = cat || '';
+
+      if (selectCarroceria) {
+        if (cat === 'Sedan' || cat === 'SUV' || cat === 'Picape' || cat === 'Hatch') {
+          selectCarroceria.value = cat;
+        } else {
+          selectCarroceria.value = '';
+        }
+      }
+
+      renderizarEstoque();
+
+      const secEstoque = document.getElementById('estoque');
+      if (secEstoque) {
+        secEstoque.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+
+  // Botão Limpar Filtros
   if (btnLimpar) {
     btnLimpar.addEventListener('click', () => {
       if (inputTermo) inputTermo.value = '';
@@ -315,15 +421,62 @@ function configurarEventosFiltros() {
       if (selectCarroceria) selectCarroceria.value = '';
       filtroAtual = { termo: '', marca: '', carroceria: '', status: 'todos' };
       statusBtns.forEach(b => {
-        if (b.dataset.statusFilter === 'todos') {
-          b.classList.add('bg-slate-900', 'text-white');
-          b.classList.remove('bg-white', 'text-slate-700');
+        const isTodos = b.dataset.statusFilter === 'todos';
+        const isDark = document.documentElement.classList.contains('dark');
+        b.classList.remove('bg-slate-900', 'text-white', 'bg-amber-400', 'text-black', 'bg-white', 'text-slate-700');
+        if (isTodos) {
+          b.classList.add(isDark ? 'bg-amber-400' : 'bg-slate-900', isDark ? 'text-black' : 'text-white');
         } else {
-          b.classList.remove('bg-slate-900', 'text-white');
           b.classList.add('bg-white', 'text-slate-700');
         }
       });
       renderizarEstoque();
+    });
+  }
+
+  // Formulário de Avaliação Express do Usado na Troca
+  const formTroca = document.getElementById('form-avaliacao-usado');
+  if (formTroca) {
+    formTroca.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const modelo = document.getElementById('troca-modelo')?.value.trim() || '';
+      const anoKm = document.getElementById('troca-ano-km')?.value.trim() || '';
+      const interesse = document.getElementById('troca-interesse')?.value.trim() || '';
+      const config = ConfigLojaDB.obterConfig();
+      const waNumero = config.whatsapp || '5511999999999';
+
+      let msg = `Olá! Gostaria de simular a avaliação do meu veículo na troca:\n\n` +
+                `🚗 *Meu Veículo:* ${modelo}\n` +
+                `📅 *Ano/Km:* ${anoKm}\n`;
+      if (interesse) {
+        msg += `🎯 *Interesse no Veículo:* ${interesse}\n`;
+      }
+      msg += `\nPoderia me passar uma pré-avaliação e as condições de pagamento?`;
+
+      const btnSubmit = formTroca.querySelector('button[type="submit"]');
+      if (btnSubmit) {
+        const originalContent = btnSubmit.innerHTML;
+        btnSubmit.innerHTML = `<span>Redirecionando para WhatsApp... ✓</span>`;
+        setTimeout(() => { btnSubmit.innerHTML = originalContent; }, 2500);
+      }
+
+      window.open(`https://wa.me/${waNumero}?text=${encodeURIComponent(msg)}`, '_blank');
+    });
+  }
+
+  // Botão Voltar ao Topo
+  const btnBackToTop = document.getElementById('back-to-top');
+  if (btnBackToTop) {
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 350) {
+        btnBackToTop.classList.add('show');
+      } else {
+        btnBackToTop.classList.remove('show');
+      }
+    }, { passive: true });
+
+    btnBackToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   }
 }
