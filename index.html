@@ -288,12 +288,27 @@
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
 
-        <!-- Foto Grande do Modal -->
-        <div class="relative h-64 sm:h-80 w-full bg-slate-900">
-          <img id="modal-foto" src="" alt="" class="w-full h-full object-cover">
-          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent"></div>
-          
-          <div class="absolute bottom-4 left-6 right-6 flex items-end justify-between">
+        <!-- Galeria Interativa do Modal -->
+        <div class="relative h-64 sm:h-96 w-full bg-slate-900 group">
+          <img id="modal-foto" src="" alt="" class="w-full h-full object-cover transition-opacity duration-300">
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-transparent to-transparent pointer-events-none"></div>
+
+          <!-- Contador de Fotos -->
+          <div class="absolute top-4 left-4 z-20 bg-slate-950/70 backdrop-blur-md text-white font-semibold text-xs px-2.5 py-1 rounded-full flex items-center gap-1.5 border border-white/20">
+            <svg class="w-3.5 h-3.5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+            <span id="modal-foto-contador">1 de 1</span>
+          </div>
+
+          <!-- Botões Anterior / Próximo -->
+          <button id="modal-btn-prev" class="absolute left-3 top-1/2 -translate-y-1/2 z-20 bg-slate-900/70 hover:bg-slate-900 text-white rounded-full p-2.5 transition shadow-lg backdrop-blur-sm" title="Foto Anterior">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+          </button>
+          <button id="modal-btn-next" class="absolute right-3 top-1/2 -translate-y-1/2 z-20 bg-slate-900/70 hover:bg-slate-900 text-white rounded-full p-2.5 transition shadow-lg backdrop-blur-sm" title="Próxima Foto">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+          </button>
+
+          <!-- Título e Preço -->
+          <div class="absolute bottom-4 left-6 right-6 flex items-end justify-between pointer-events-none">
             <div>
               <span id="modal-badge-status" class="badge-status badge-disponivel mb-2">Disponível</span>
               <h3 id="modal-titulo" class="text-xl sm:text-2xl font-black text-white"></h3>
@@ -303,6 +318,13 @@
               <span class="text-xs text-slate-300 block font-medium">Preço à Vista</span>
               <span id="modal-preco" class="text-2xl sm:text-3xl font-extrabold text-white"></span>
             </div>
+          </div>
+        </div>
+
+        <!-- Faixa de Miniaturas (Thumbnails da Galeria) -->
+        <div id="modal-thumbs-container" class="bg-slate-900/95 px-4 py-2.5 border-t border-slate-800 overflow-x-auto">
+          <div id="modal-thumbs-strip" class="flex items-center gap-2">
+            <!-- Inserido dinamicamente via JS -->
           </div>
         </div>
 

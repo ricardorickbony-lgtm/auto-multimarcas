@@ -3,10 +3,15 @@
  * Auto Multimarcas - Padrão Ricardo & Severino
  */
 
+let fotosModal = [];
+let fotoIndexAtual = 0;
+
 document.addEventListener('DOMContentLoaded', () => {
+  const configLoja = ConfigLojaDB.obterConfig();
+
   // 1. Inicializa Atendimento WhatsApp Inteligente
   initWhatsAppStatus({
-    numero: '5511999999999', // Substituir pelo WhatsApp da loja
+    numero: configLoja.whatsapp || '5511999999999',
     diasSemana: [1, 2, 3, 4, 5],
     horaInicio: 8.5, // 08:30
     horaFim: 18.5,   // 18:30
@@ -14,7 +19,10 @@ document.addEventListener('DOMContentLoaded', () => {
     sabadoHoraFim: 14 // 14:00
   });
 
-  // 2. Inicializa Vitrine de Veículos
+  // 2. Aplica Identidade da Loja
+  aplicarIdentidadeLoja(configLoja);
+
+  // 3. Inicializa Vitrine de Veículos
   initVitrine();
 });
 
@@ -25,21 +33,35 @@ let filtroAtual = {
   status: 'todos'
 };
 
+function aplicarIdentidadeLoja(config) {
+  if (!config) return;
+  // Atualiza título da página e textos principais se houver
+  const elLogo = document.querySelector('header h1, header .tracking-tight');
+  if (elLogo && config.nome) {
+    // Mantém badge PRO se houver
+  }
+}
+
 function initVitrine() {
   povoarFiltroMarcas();
   renderizarEstoque();
   configurarEventosFiltros();
   configurarModal();
 
-  // Escuta atualizações de estoque emitidas pelo painel do lojista
+  // Escuta atualizações de estoque e configurações emitidas pelo painel
   window.addEventListener('estoque-atualizado', () => {
     povoarFiltroMarcas();
     renderizarEstoque();
   });
 
+  window.addEventListener('config-loja-atualizada', (e) => {
+    aplicarIdentidadeLoja(e.detail);
+    renderizarEstoque();
+  });
+
   // Escuta alterações de outras abas via storage
   window.addEventListener('storage', (e) => {
-    if (e.key === 'auto_multimarcas_estoque_v1') {
+    if (e.key === 'auto_multimarcas_estoque_v2' || e.key === 'auto_multimarcas_config_loja_v1') {
       povoarFiltroMarcas();
       renderizarEstoque();
     }
@@ -106,9 +128,8 @@ function renderizarEstoque() {
   const veiculosFiltrados = filtrarVeiculos();
   const stats = EstoqueDB.obterEstatisticas();
 
-  // Atualiza contador
   if (contador) {
-    contador.innerHTML = `Mostrando <strong>${veiculosFiltrados.length}</strong> de <strong>${stats.total}</strong> veículos (${stats.disponiveis} disponíveis / ${stats.vendidos} vendidos)`;
+    contador.innerHTML = `Mostrando <strong>${veiculosFiltrados.length}</strong> de <strong>${stats.total}</strong> veículos em catálogo (${stats.disponiveis} disponíveis / ${stats.vendidos} vendidos)`;
   }
 
   if (veiculosFiltrados.length === 0) {
@@ -132,6 +153,8 @@ function criarCardCarro(carro) {
 
   const precoFormatado = EstoqueDB.formatarPreco(carro.preco);
   const kmFormatado = EstoqueDB.formatarKm(carro.km);
+  const configLoja = ConfigLojaDB.obterConfig();
+  const waNumero = configLoja.whatsapp || '5511999999999';
 
   let statusBadgeClass = 'badge-disponivel';
   let statusTexto = 'Disponível';
@@ -145,27 +168,37 @@ function criarCardCarro(carro) {
     statusTexto = 'Vendido';
   }
 
-  // Tags do carro
   const tagsHtml = (carro.tags || []).slice(0, 2).map(tag => 
     `<span class="bg-slate-100 text-slate-700 text-[10px] font-semibold px-2 py-0.5 rounded">${tag}</span>`
   ).join('');
 
-  // Mensagem personalizada do WhatsApp por carro
   const msgWhatsApp = encodeURIComponent(
     `Olá! Vi no site o veículo ${carro.marca} ${carro.modelo} (${carro.anoFabricacao}/${carro.anoModelo}) por ${precoFormatado} e gostaria de mais informações!`
   );
-  const linkWhatsApp = `https://wa.me/5511999999999?text=${msgWhatsApp}`;
+  const linkWhatsApp = `https://wa.me/${waNumero}?text=${msgWhatsApp}`;
+
+  const listaFotos = carro.fotos && carro.fotos.length > 0 ? carro.fotos : [carro.foto];
+  const fotoCapa = listaFotos[0];
+  const totalFotos = listaFotos.length;
 
   div.innerHTML = `
     <!-- Imagem e Badges -->
     <div class="relative h-52 sm:h-56 w-full bg-slate-100 overflow-hidden">
-      <img src="${carro.foto}" alt="${carro.marca} ${carro.modelo}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105" loading="lazy">
+      <img src="${fotoCapa}" alt="${carro.marca} ${carro.modelo}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105" loading="lazy">
       
       <!-- Badges Superiores -->
       <div class="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none">
         <span class="badge-status ${statusBadgeClass}">${statusTexto}</span>
         ${carro.destaque ? '<span class="bg-amber-500 text-slate-950 font-black text-[10px] px-2 py-0.5 rounded shadow">★ DESTAQUE</span>' : ''}
       </div>
+
+      <!-- Badge de Quantidade de Fotos -->
+      ${totalFotos > 1 ? `
+        <div class="absolute bottom-2.5 right-2.5 bg-slate-950/75 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 border border-white/20">
+          <svg class="w-3 h-3 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+          <span>${totalFotos} fotos</span>
+        </div>
+      ` : ''}
 
       <!-- Selo Carro Vendido -->
       ${isVendido ? `
@@ -179,12 +212,10 @@ function criarCardCarro(carro) {
     <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
       
       <div>
-        <!-- Tags Rápidas -->
         <div class="flex items-center gap-1.5 mb-2">
           ${tagsHtml}
         </div>
 
-        <!-- Marca e Modelo -->
         <h3 class="font-bold text-slate-900 text-base sm:text-lg line-clamp-1" title="${carro.marca} ${carro.modelo}">
           ${carro.marca} ${carro.modelo}
         </h3>
@@ -219,8 +250,8 @@ function criarCardCarro(carro) {
         </div>
 
         <div class="flex items-center gap-2">
-          <button data-ver-detalhes="${carro.id}" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded-lg text-xs font-semibold transition" title="Ver Detalhes">
-            Detalhes
+          <button data-ver-detalhes="${carro.id}" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded-lg text-xs font-semibold transition" title="Ver Detalhes e Fotos">
+            Ver Fotos
           </button>
           ${!isVendido ? `
             <a href="${linkWhatsApp}" target="_blank" rel="noopener noreferrer" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1 shadow-sm" title="Proposta via WhatsApp">
@@ -300,11 +331,11 @@ function configurarEventosFiltros() {
 function configurarModal() {
   const modal = document.getElementById('modal-veiculo');
   const btnFechar = document.getElementById('btn-fechar-modal');
+  const btnPrev = document.getElementById('modal-btn-prev');
+  const btnNext = document.getElementById('modal-btn-next');
   if (!modal || !btnFechar) return;
 
-  btnFechar.addEventListener('click', () => {
-    modal.classList.add('hidden');
-  });
+  btnFechar.addEventListener('click', () => modal.classList.add('hidden'));
 
   modal.addEventListener('click', (e) => {
     if (e.target.classList.contains('modal-backdrop')) {
@@ -313,12 +344,20 @@ function configurarModal() {
   });
 
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+    if (modal.classList.contains('hidden')) return;
+
+    if (e.key === 'Escape') {
       modal.classList.add('hidden');
+    } else if (e.key === 'ArrowLeft') {
+      navegarFoto(-1);
+    } else if (e.key === 'ArrowRight') {
+      navegarFoto(1);
     }
   });
 
-  // Event delegation para abrir modal ao clicar em "Detalhes"
+  if (btnPrev) btnPrev.addEventListener('click', () => navegarFoto(-1));
+  if (btnNext) btnNext.addEventListener('click', () => navegarFoto(1));
+
   document.addEventListener('click', (e) => {
     const btnDetalhes = e.target.closest('[data-ver-detalhes]');
     if (btnDetalhes) {
@@ -328,12 +367,47 @@ function configurarModal() {
   });
 }
 
+function navegarFoto(direcao) {
+  if (fotosModal.length <= 1) return;
+  fotoIndexAtual = (fotoIndexAtual + direcao + fotosModal.length) % fotosModal.length;
+  atualizarFotoModal(fotoIndexAtual);
+}
+
+function atualizarFotoModal(index) {
+  const fotoEl = document.getElementById('modal-foto');
+  const contadorEl = document.getElementById('modal-foto-contador');
+  const thumbsContainer = document.getElementById('modal-thumbs-strip');
+
+  if (fotoEl && fotosModal[index]) {
+    fotoEl.style.opacity = '0.4';
+    setTimeout(() => {
+      fotoEl.src = fotosModal[index];
+      fotoEl.style.opacity = '1';
+    }, 120);
+  }
+
+  if (contadorEl) {
+    contadorEl.textContent = `${index + 1} de ${fotosModal.length}`;
+  }
+
+  // Atualiza borda ativa das miniaturas
+  if (thumbsContainer) {
+    const thumbs = thumbsContainer.querySelectorAll('[data-thumb-idx]');
+    thumbs.forEach((thumb, i) => {
+      if (i === index) {
+        thumb.className = 'w-16 h-12 rounded-lg object-cover cursor-pointer border-2 border-blue-500 scale-105 transition-all shadow-md';
+      } else {
+        thumb.className = 'w-16 h-12 rounded-lg object-cover cursor-pointer opacity-60 hover:opacity-100 transition-all border border-slate-700';
+      }
+    });
+  }
+}
+
 function abrirModalCarro(id) {
   const carro = EstoqueDB.obterPorId(id);
   if (!carro) return;
 
   const modal = document.getElementById('modal-veiculo');
-  const fotoEl = document.getElementById('modal-foto');
   const tituloEl = document.getElementById('modal-titulo');
   const subtituloEl = document.getElementById('modal-subtitulo');
   const precoEl = document.getElementById('modal-preco');
@@ -347,9 +421,10 @@ function abrirModalCarro(id) {
   const btnWa = document.getElementById('modal-btn-whatsapp');
   const sim36 = document.getElementById('modal-sim-36');
   const sim48 = document.getElementById('modal-sim-48');
+  const thumbsStrip = document.getElementById('modal-thumbs-strip');
+  const configLoja = ConfigLojaDB.obterConfig();
+  const waNumero = configLoja.whatsapp || '5511999999999';
 
-  fotoEl.src = carro.foto;
-  fotoEl.alt = `${carro.marca} ${carro.modelo}`;
   tituloEl.textContent = `${carro.marca} ${carro.modelo}`;
   subtituloEl.textContent = `${carro.carroceria} • Cor ${carro.cor} • Placa Final ${carro.placaFinal}`;
   precoEl.textContent = EstoqueDB.formatarPreco(carro.preco);
@@ -358,6 +433,32 @@ function abrirModalCarro(id) {
   cambioEl.textContent = carro.cambio;
   combustivelEl.textContent = carro.combustivel;
   descEl.textContent = carro.descricao || 'Veículo com laudo cautelar aprovado e garantia de procedência.';
+
+  // Inicializa galeria
+  fotosModal = carro.fotos && carro.fotos.length > 0 ? [...carro.fotos] : [carro.foto];
+  fotoIndexAtual = 0;
+
+  // Renderiza miniaturas
+  if (thumbsStrip) {
+    thumbsStrip.innerHTML = '';
+    fotosModal.forEach((url, idx) => {
+      const imgThumb = document.createElement('img');
+      imgThumb.src = url;
+      imgThumb.alt = `Miniatura ${idx + 1}`;
+      imgThumb.dataset.thumbIdx = idx;
+      imgThumb.className = idx === 0 
+        ? 'w-16 h-12 rounded-lg object-cover cursor-pointer border-2 border-blue-500 scale-105 transition-all shadow-md'
+        : 'w-16 h-12 rounded-lg object-cover cursor-pointer opacity-60 hover:opacity-100 transition-all border border-slate-700';
+      
+      imgThumb.addEventListener('click', () => {
+        fotoIndexAtual = idx;
+        atualizarFotoModal(fotoIndexAtual);
+      });
+      thumbsStrip.appendChild(imgThumb);
+    });
+  }
+
+  atualizarFotoModal(0);
 
   // Status Badge
   if (carro.status === 'disponivel') {
@@ -380,7 +481,7 @@ function abrirModalCarro(id) {
     opcEl.appendChild(span);
   });
 
-  // Simulação de Parcelas (Entrada 30% + Financiamento com taxa média 1.49% a.m.)
+  // Simulação de Parcelas (Entrada 30%)
   const entrada = carro.preco * 0.30;
   const saldo = carro.preco - entrada;
   const parcela36 = Math.round((saldo * 1.35) / 36);
@@ -389,18 +490,17 @@ function abrirModalCarro(id) {
   sim36.textContent = `36x de ${EstoqueDB.formatarPreco(parcela36)}`;
   sim48.textContent = `48x de ${EstoqueDB.formatarPreco(parcela48)}`;
 
-  // Link WhatsApp do Modal
+  // Link WhatsApp com número dinâmico da loja
   const msgModal = encodeURIComponent(
     `Olá! Tenho muito interesse no veículo ${carro.marca} ${carro.modelo} (${carro.anoFabricacao}/${carro.anoModelo}) no valor de ${EstoqueDB.formatarPreco(carro.preco)}. Gostaria de agendar uma visita e simular as condições!`
   );
-  btnWa.href = `https://wa.me/5511999999999?text=${msgModal}`;
+  btnWa.href = `https://wa.me/${waNumero}?text=${msgModal}`;
 
   modal.classList.remove('hidden');
 }
 
 /**
  * Gerenciador de Atendimento WhatsApp em Tempo Real
- * (Padrão Oficial Ricardo & Severino)
  */
 function initWhatsAppStatus(config) {
   const {
@@ -435,13 +535,13 @@ function initWhatsAppStatus(config) {
   if (isOnline) {
     dotEl.className = 'wa-status-dot online';
     textEl.textContent = 'Online Agora';
-    const msg = encodeURIComponent('Olá! Vim pelo site da AutoPrime e gostaria de tirar uma dúvida sobre um veículo.');
+    const msg = encodeURIComponent('Olá! Vim pelo site da loja e gostaria de tirar uma dúvida sobre um veículo.');
     linkEl.href = `https://wa.me/${numero}?text=${msg}`;
   } else {
     linkEl.classList.add('offline-mode');
     dotEl.className = 'wa-status-dot offline';
     textEl.textContent = 'Fora do Expediente';
-    const msg = encodeURIComponent('Olá! Vi o site da AutoPrime fora do horário comercial e gostaria de deixar uma mensagem.');
+    const msg = encodeURIComponent('Olá! Vi o site fora do horário comercial e gostaria de deixar uma mensagem.');
     linkEl.href = `https://wa.me/${numero}?text=${msg}`;
   }
 }

@@ -5,12 +5,12 @@
 
 const AUTH_CONFIG = {
   usuarioPadrao: 'admin',
-  senhaPadrao: 'admin123',
   sessionKey: 'autoprime_auth_session'
 };
 
 let filtroStatusAdmin = 'todos';
 let termoBuscaAdmin = '';
+let fotosFormulario = [];
 
 document.addEventListener('DOMContentLoaded', () => {
   configurarAutenticacao();
@@ -19,8 +19,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   configurarEventosAdmin();
   configurarFormulario();
+  configurarAlterarSenha();
+  configurarConfigLoja();
 });
-
 
 function atualizarDashboard() {
   renderizarMetricas();
@@ -49,11 +50,9 @@ function renderizarTabela() {
   const todos = EstoqueDB.obterVeiculos();
 
   const filtrados = todos.filter(carro => {
-    // Filtro de status da aba
     if (filtroStatusAdmin === 'disponivel' && carro.status !== 'disponivel') return false;
     if (filtroStatusAdmin === 'vendido' && carro.status !== 'vendido') return false;
 
-    // Filtro de busca textual
     if (termoBuscaAdmin) {
       const termo = termoBuscaAdmin.toLowerCase();
       const match = 
@@ -91,12 +90,17 @@ function renderizarTabela() {
 
     const precoFmt = EstoqueDB.formatarPreco(carro.preco);
     const kmFmt = EstoqueDB.formatarKm(carro.km);
+    const qtdFotos = (carro.fotos && carro.fotos.length) || 1;
+    const fotoPrincipal = (carro.fotos && carro.fotos[0]) || carro.foto;
 
     tr.innerHTML = `
       <!-- Veículo / Foto / Nome -->
       <td class="py-3.5 px-4 sm:px-6">
         <div class="flex items-center gap-3">
-          <img src="${carro.foto}" alt="" class="w-14 h-11 rounded-lg object-cover bg-slate-200 border border-slate-200 flex-shrink-0">
+          <div class="relative w-16 h-12 flex-shrink-0">
+            <img src="${fotoPrincipal}" alt="" class="w-full h-full rounded-lg object-cover bg-slate-200 border border-slate-200">
+            <span class="absolute -bottom-1 -right-1 bg-slate-900/90 text-white text-[9px] font-bold px-1.5 py-0.2 rounded shadow" title="Total de fotos">${qtdFotos} 📷</span>
+          </div>
           <div>
             <div class="font-bold text-slate-900">${carro.marca} ${carro.modelo}</div>
             <div class="text-xs text-slate-500 font-medium">Placa final ${carro.placaFinal} • ${carro.cor} • ${carro.carroceria}</div>
@@ -131,7 +135,7 @@ function renderizarTabela() {
       <td class="py-3.5 px-4 sm:px-6 text-right">
         <div class="inline-flex items-center gap-1.5">
           
-          <!-- Botão Vender/Reativar em 1 Clique -->
+          <!-- Botão Vender/Reativar -->
           ${carro.status === 'disponivel' ? `
             <button data-action="marcar-vendido" data-id="${carro.id}" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-300 font-bold text-xs px-2.5 py-1.5 rounded-lg transition" title="Marcar como Vendido">
               ✓ Marcar Vendido
@@ -188,15 +192,15 @@ function configurarEventosAdmin() {
 
   if (btnRestaurar) {
     btnRestaurar.addEventListener('click', () => {
-      if (confirm('Deseja restaurar os veículos de demonstração iniciais?')) {
+      if (confirm('Deseja restaurar os veículos de demonstração com catálogo completo (12 carros)?')) {
         EstoqueDB.restaurarDemonstracao();
         atualizarDashboard();
-        mostrarToast('Veículos de demonstração restaurados com sucesso!');
+        mostrarToast('Catálogo de 12 veículos restaurado com sucesso!');
       }
     });
   }
 
-  // Delegação de eventos nas ações da tabela
+  // Ações da tabela
   document.getElementById('admin-tabela-veiculos').addEventListener('click', (e) => {
     const btn = e.target.closest('[data-action]');
     if (!btn) return;
@@ -228,6 +232,38 @@ function configurarEventosAdmin() {
   });
 }
 
+/**
+ * Gestão de Múltiplas Fotos no Formulário
+ */
+function renderizarGridFotosForm() {
+  const grid = document.getElementById('form-fotos-grid');
+  const contador = document.getElementById('form-fotos-contador');
+  if (!grid) return;
+
+  if (contador) {
+    contador.textContent = `${fotosFormulario.length} foto(s) na galeria`;
+  }
+
+  grid.innerHTML = '';
+
+  fotosFormulario.forEach((url, idx) => {
+    const card = document.createElement('div');
+    card.className = 'relative group rounded-lg overflow-hidden border border-slate-200 bg-slate-100 aspect-video';
+
+    const isCapa = idx === 0;
+
+    card.innerHTML = `
+      <img src="${url}" alt="" class="w-full h-full object-cover">
+      ${isCapa ? '<span class="absolute top-1 left-1 bg-amber-500 text-slate-950 font-black text-[9px] px-1.5 py-0.5 rounded shadow">CAPA</span>' : ''}
+      <button type="button" data-remover-foto="${idx}" class="absolute top-1 right-1 bg-red-600 hover:bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold shadow transition opacity-90 group-hover:opacity-100" title="Remover Foto">
+        ✕
+      </button>
+    `;
+
+    grid.appendChild(card);
+  });
+}
+
 function configurarFormulario() {
   const modal = document.getElementById('modal-form-veiculo');
   const btnNovo = document.getElementById('btn-novo-veiculo');
@@ -236,15 +272,16 @@ function configurarFormulario() {
   const form = document.getElementById('form-veiculo');
   const fileInput = document.getElementById('form-foto-file');
   const fotoUrlInput = document.getElementById('form-foto-url');
-  const previewImg = document.getElementById('form-foto-preview');
-  const previewContainer = document.getElementById('form-foto-preview-container');
+  const btnAddFotoUrl = document.getElementById('btn-adicionar-foto-url');
+  const gridFotos = document.getElementById('form-fotos-grid');
 
   if (btnNovo) {
     btnNovo.addEventListener('click', () => {
       form.reset();
       document.getElementById('form-id').value = '';
       document.getElementById('form-modal-titulo').textContent = 'Cadastrar Novo Veículo';
-      previewContainer.classList.add('hidden');
+      fotosFormulario = [];
+      renderizarGridFotosForm();
       modal.classList.remove('hidden');
     });
   }
@@ -257,52 +294,93 @@ function configurarFormulario() {
     if (e.target.classList.contains('modal-backdrop')) fecharModal();
   });
 
-  // Upload de arquivo de imagem com conversão para Base64
-  if (fileInput) {
-    fileInput.addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          fotoUrlInput.value = event.target.result;
-          previewImg.src = event.target.result;
-          previewContainer.classList.remove('hidden');
-        };
-        reader.readAsDataURL(file);
+  // Adicionar foto por URL
+  if (btnAddFotoUrl && fotoUrlInput) {
+    btnAddFotoUrl.addEventListener('click', () => {
+      const url = fotoUrlInput.value.trim();
+      if (url) {
+        fotosFormulario.push(url);
+        fotoUrlInput.value = '';
+        renderizarGridFotosForm();
       }
     });
   }
 
-  // Preenchimento de foto demo ao clicar nos botões rápidos
-  document.querySelectorAll('.btn-foto-demo').forEach(btn => {
+  // Upload múltiplo de arquivos de imagem locais
+  if (fileInput) {
+    fileInput.addEventListener('change', (e) => {
+      const files = Array.from(e.target.files);
+      if (files.length === 0) return;
+
+      files.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          fotosFormulario.push(event.target.result);
+          renderizarGridFotosForm();
+        };
+        reader.readAsDataURL(file);
+      });
+    });
+  }
+
+  // Remover foto específica da galeria
+  if (gridFotos) {
+    gridFotos.addEventListener('click', (e) => {
+      const btnRemover = e.target.closest('[data-remover-foto]');
+      if (btnRemover) {
+        const idx = parseInt(btnRemover.dataset.removerFoto);
+        fotosFormulario.splice(idx, 1);
+        renderizarGridFotosForm();
+      }
+    });
+  }
+
+  // Pacotes de fotos prontas de teste
+  const pacotesDemo = {
+    compass: [
+      'https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&w=900&q=80',
+      'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=900&q=80',
+      'https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=900&q=80'
+    ],
+    bmw: [
+      'https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=900&q=80',
+      'https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=900&q=80',
+      'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=900&q=80'
+    ],
+    porsche: [
+      'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=80',
+      'https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=900&q=80',
+      'https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=900&q=80'
+    ],
+    hilux: [
+      'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=900&q=80',
+      'https://images.unsplash.com/photo-1559416523-140ddc3d238c?auto=format&fit=crop&w=900&q=80'
+    ]
+  };
+
+  document.querySelectorAll('.btn-pack-demo').forEach(btn => {
     btn.addEventListener('click', () => {
-      const url = btn.dataset.url;
-      fotoUrlInput.value = url;
-      previewImg.src = url;
-      previewContainer.classList.remove('hidden');
+      const pack = btn.dataset.pack;
+      if (pacotesDemo[pack]) {
+        fotosFormulario = [...pacotesDemo[pack]];
+        renderizarGridFotosForm();
+      }
     });
   });
 
-  // Atualiza preview ao digitar URL
-  if (fotoUrlInput) {
-    fotoUrlInput.addEventListener('input', () => {
-      if (fotoUrlInput.value.trim()) {
-        previewImg.src = fotoUrlInput.value.trim();
-        previewContainer.classList.remove('hidden');
-      } else {
-        previewContainer.classList.add('hidden');
-      }
-    });
-  }
-
-  // Submissão do Formulário
+  // Salvar Veículo
   if (form) {
     form.addEventListener('submit', (e) => {
       e.preventDefault();
 
       const id = document.getElementById('form-id').value;
       const tagsString = document.getElementById('form-tags').value;
-      const tagsArray = tagsString ? tagsString.split(',').map(t => t.trim()).filter(Boolean) : ['Revisado'];
+      const tagsArray = tagsString ? tagsString.split(',').map(t => t.trim()).filter(Boolean) : ['Revisado com Garantia'];
+
+      // Se não adicionou nenhuma foto, usa placeholder de alta qualidade
+      const fotosFinais = fotosFormulario.length > 0 
+        ? [...fotosFormulario] 
+        : ['https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=900&q=80'];
 
       const dadosCarro = {
         marca: document.getElementById('form-marca').value.trim(),
@@ -316,18 +394,17 @@ function configurarFormulario() {
         combustivel: document.getElementById('form-combustivel').value,
         carroceria: document.getElementById('form-carroceria').value,
         status: document.getElementById('form-status').value,
-        foto: document.getElementById('form-foto-url').value.trim() || 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=900&q=80',
+        foto: fotosFinais[0],
+        fotos: fotosFinais,
         tags: tagsArray,
         descricao: document.getElementById('form-descricao').value.trim(),
         destaque: document.getElementById('form-destaque').checked
       };
 
       if (id) {
-        // Atualização
         EstoqueDB.atualizarVeiculo(id, dadosCarro);
-        mostrarToast('Veículo atualizado com sucesso no site!');
+        mostrarToast('Veículo e galeria de fotos atualizados com sucesso!');
       } else {
-        // Novo Cadastro
         EstoqueDB.adicionarVeiculo(dadosCarro);
         mostrarToast('Novo veículo publicado na vitrine!');
       }
@@ -356,34 +433,119 @@ function abrirFormularioEditar(id) {
   document.getElementById('form-combustivel').value = carro.combustivel;
   document.getElementById('form-carroceria').value = carro.carroceria;
   document.getElementById('form-status').value = carro.status;
-  document.getElementById('form-foto-url').value = carro.foto;
   document.getElementById('form-tags').value = (carro.tags || []).join(', ');
   document.getElementById('form-descricao').value = carro.descricao || '';
   document.getElementById('form-destaque').checked = Boolean(carro.destaque);
 
-  const previewImg = document.getElementById('form-foto-preview');
-  const previewContainer = document.getElementById('form-foto-preview-container');
-  if (carro.foto) {
-    previewImg.src = carro.foto;
-    previewContainer.classList.remove('hidden');
-  }
+  // Carrega fotos na galeria do form
+  fotosFormulario = carro.fotos && Array.isArray(carro.fotos) && carro.fotos.length > 0 
+    ? [...carro.fotos] 
+    : (carro.foto ? [carro.foto] : []);
+  renderizarGridFotosForm();
 
   modal.classList.remove('hidden');
 }
 
-function mostrarToast(mensagem) {
-  const toast = document.getElementById('toast-aviso');
-  const texto = document.getElementById('toast-texto');
-  if (!toast || !texto) return;
+/**
+ * Funcionalidade de Alterar Senha do Lojista
+ */
+function configurarAlterarSenha() {
+  const btnAbrir = document.getElementById('btn-abrir-alterar-senha');
+  const modal = document.getElementById('modal-alterar-senha');
+  const btnFechar = document.getElementById('btn-fechar-modal-senha');
+  const btnCancelar = document.getElementById('btn-cancelar-senha');
+  const form = document.getElementById('form-alterar-senha');
+  const erroMsg = document.getElementById('senha-erro-msg');
 
-  texto.textContent = mensagem;
-  toast.classList.remove('translate-y-24', 'opacity-0');
-  toast.classList.add('translate-y-0', 'opacity-100');
+  if (!modal) return;
 
-  setTimeout(() => {
-    toast.classList.remove('translate-y-0', 'opacity-100');
-    toast.classList.add('translate-y-24', 'opacity-0');
-  }, 3500);
+  const abrir = () => {
+    form.reset();
+    erroMsg.classList.add('hidden');
+    modal.classList.remove('hidden');
+  };
+
+  const fechar = () => modal.classList.add('hidden');
+
+  if (btnAbrir) btnAbrir.addEventListener('click', abrir);
+  if (btnFechar) btnFechar.addEventListener('click', fechar);
+  if (btnCancelar) btnCancelar.addEventListener('click', fechar);
+  modal.addEventListener('click', (e) => {
+    if (e.target.classList.contains('modal-backdrop')) fechar();
+  });
+
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const atual = document.getElementById('senha-atual').value;
+      const nova = document.getElementById('senha-nova').value;
+      const confirmar = document.getElementById('senha-confirmar').value;
+
+      if (nova !== confirmar) {
+        erroMsg.textContent = 'A confirmação não coincide com a nova senha!';
+        erroMsg.classList.remove('hidden');
+        return;
+      }
+
+      const res = AuthDB.alterarSenha(atual, nova);
+      if (res.sucesso) {
+        fechar();
+        mostrarToast('✓ Senha alterada com sucesso! Use a nova senha no próximo acesso.');
+      } else {
+        erroMsg.textContent = res.mensagem;
+        erroMsg.classList.remove('hidden');
+      }
+    });
+  }
+}
+
+/**
+ * Funcionalidade de Configurações da Loja (White-Label)
+ */
+function configurarConfigLoja() {
+  const btnAbrir = document.getElementById('btn-abrir-config-loja');
+  const modal = document.getElementById('modal-config-loja');
+  const btnFechar = document.getElementById('btn-fechar-modal-loja');
+  const btnCancelar = document.getElementById('btn-cancelar-loja');
+  const form = document.getElementById('form-config-loja');
+
+  if (!modal) return;
+
+  const abrir = () => {
+    const config = ConfigLojaDB.obterConfig();
+    document.getElementById('config-nome-loja').value = config.nome || '';
+    document.getElementById('config-slogan-loja').value = config.slogan || '';
+    document.getElementById('config-whatsapp').value = config.whatsapp || '';
+    document.getElementById('config-telefone').value = config.telefone || '';
+    document.getElementById('config-endereco').value = config.endereco || '';
+    modal.classList.remove('hidden');
+  };
+
+  const fechar = () => modal.classList.add('hidden');
+
+  if (btnAbrir) btnAbrir.addEventListener('click', abrir);
+  if (btnFechar) btnFechar.addEventListener('click', fechar);
+  if (btnCancelar) btnCancelar.addEventListener('click', fechar);
+  modal.addEventListener('click', (e) => {
+    if (e.target.classList.contains('modal-backdrop')) fechar();
+  });
+
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const novosDados = {
+        nome: document.getElementById('config-nome-loja').value.trim(),
+        slogan: document.getElementById('config-slogan-loja').value.trim(),
+        whatsapp: document.getElementById('config-whatsapp').value.trim(),
+        telefone: document.getElementById('config-telefone').value.trim(),
+        endereco: document.getElementById('config-endereco').value.trim()
+      };
+
+      ConfigLojaDB.salvarConfig(novosDados);
+      fechar();
+      mostrarToast('✓ Identidade da loja atualizada! A vitrine já reflete as mudanças.');
+    });
+  }
 }
 
 /**
@@ -423,19 +585,18 @@ function configurarAutenticacao() {
     }
   };
 
-  // Verifica estado inicial
   aplicarEstadoAuth(estaAutenticado());
 
-  // Submissão do formulário de login
   if (formLogin) {
     formLogin.addEventListener('submit', (e) => {
       e.preventDefault();
       const usuario = inputUsuario.value.trim().toLowerCase();
       const senha = inputSenha.value;
 
-      // Validação das credenciais (aceita 'admin' ou email 'lojista@autoprime.com.br')
+      // Validação das credenciais (aceita 'admin' ou email da loja, comparando com a senha configurada no AuthDB)
+      const senhaAtualConfigurada = AuthDB.obterSenha();
       const usuarioValido = usuario === 'admin' || usuario === 'lojista@autoprime.com.br';
-      const senhaValida = senha === AUTH_CONFIG.senhaPadrao;
+      const senhaValida = senha === senhaAtualConfigurada;
 
       if (usuarioValido && senhaValida) {
         alertaErro.classList.add('hidden');
@@ -454,7 +615,6 @@ function configurarAutenticacao() {
         alertaErro.classList.remove('hidden');
         document.getElementById('login-erro-msg').textContent = 'Usuário ou senha incorretos!';
         
-        // Efeito shake no card de login
         const card = formLogin.closest('.bg-white');
         if (card) {
           card.classList.add('shake');
@@ -464,7 +624,6 @@ function configurarAutenticacao() {
     });
   }
 
-  // Toggle visualizar senha (olhinho)
   if (btnToggleSenha && inputSenha) {
     btnToggleSenha.addEventListener('click', () => {
       const isPassword = inputSenha.type === 'password';
@@ -472,16 +631,15 @@ function configurarAutenticacao() {
     });
   }
 
-  // Preenchimento automático para testes / demo
+  // Preenchimento automático para apresentação (usa a senha atual do AuthDB)
   if (btnPreencherDemo && inputUsuario && inputSenha) {
     btnPreencherDemo.addEventListener('click', () => {
       inputUsuario.value = 'admin';
-      inputSenha.value = 'admin123';
+      inputSenha.value = AuthDB.obterSenha();
       if (alertaErro) alertaErro.classList.add('hidden');
     });
   }
 
-  // Botão de Logout
   if (btnLogout) {
     btnLogout.addEventListener('click', () => {
       if (confirm('Deseja realmente sair do painel?')) {
@@ -495,3 +653,17 @@ function configurarAutenticacao() {
   }
 }
 
+function mostrarToast(mensagem) {
+  const toast = document.getElementById('toast-aviso');
+  const texto = document.getElementById('toast-texto');
+  if (!toast || !texto) return;
+
+  texto.textContent = mensagem;
+  toast.classList.remove('translate-y-24', 'opacity-0');
+  toast.classList.add('translate-y-0', 'opacity-100');
+
+  setTimeout(() => {
+    toast.classList.remove('translate-y-0', 'opacity-100');
+    toast.classList.add('translate-y-24', 'opacity-0');
+  }, 3500);
+}
