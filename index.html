@@ -42,18 +42,21 @@
 <body class="bg-slate-50 text-slate-900 font-sans antialiased min-h-screen flex flex-col">
 
   <!-- ========================================================================= -->
-  <!-- BARRA DE DEMONSTRAÇÃO DO SISTEMA INTEGRADO (Para Apresentação a Clientes) -->
+  <!-- BARRA DE SELEÇÃO DE TEMPLATES (Para Apresentação a Clientes)              -->
   <!-- ========================================================================= -->
-  <div class="demo-banner text-white px-4 py-2.5 text-xs sm:text-sm">
+  <div class="demo-banner text-white px-4 py-2 text-xs">
     <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-2">
       <div class="flex items-center gap-2 text-center md:text-left">
-        <span class="inline-flex items-center justify-center bg-blue-500 text-white rounded-full w-5 h-5 font-bold text-xs">✓</span>
-        <span><strong>Sistema de Estoque Integrado:</strong> Adicione, edite ou marque carros como vendidos no Painel e veja refletir aqui na hora!</span>
+        <span class="inline-flex items-center justify-center bg-blue-500 text-white rounded-full w-5 h-5 font-bold text-[10px]">✓</span>
+        <span><strong>TEMPLATE 1:</strong> Modelo <strong>Modern Multimarcas</strong> (Seminovos e Alta Conversão)</span>
       </div>
       <div class="flex items-center gap-2">
-        <a href="admin.html" class="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold px-3 py-1.5 rounded-lg shadow-sm transition text-xs">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-          Abrir Painel do Lojista
+        <span class="text-slate-400 text-[11px] hidden lg:inline">Alternar Template:</span>
+        <span class="bg-blue-600 text-white font-bold px-2.5 py-1 rounded text-[11px]">🚗 Modelo Moderno</span>
+        <a href="template-luxo.html" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-2.5 py-1 rounded text-[11px] transition">💎 Modelo Luxo</a>
+        <a href="template-clean.html" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-2.5 py-1 rounded text-[11px] transition">🏢 Modelo Clean</a>
+        <a href="admin.html" class="inline-flex items-center gap-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-2.5 py-1 rounded text-[11px] transition ml-1">
+          <span>Painel Gestor ⚙️</span>
         </a>
       </div>
     </div>

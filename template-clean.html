@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoPrime Concessionária | Veículos Certificados</title>
+  <meta name="description" content="A escolha inteligente para seu seminovo. Veículos inspecionados com histórico certificado e garantia nacional.">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Estilos Customizados -->
+  <link rel="stylesheet" href="css/style.css">
+  
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #fcfcfd;
+    }
+    .clean-card {
+      background: #ffffff;
+      border: 1px solid #eef2f6;
+      border-radius: 16px;
+      transition: all 0.25s ease;
+    }
+    .clean-card:hover {
+      border-color: #cbd5e1;
+      transform: translateY(-3px);
+      box-shadow: 0 16px 32px -8px rgba(15, 23, 42, 0.08);
+    }
+  </style>
+</head>
+<body class="text-slate-900 antialiased min-h-screen flex flex-col">
+
+  <!-- ========================================================================= -->
+  <!-- BARRA SELETORA DE TEMPLATES (Para você alternar na frente do cliente)     -->
+  <!-- ========================================================================= -->
+  <div class="bg-slate-900 text-white px-4 py-2 text-xs border-b border-slate-800">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+      <div class="flex items-center gap-2">
+        <span class="text-blue-400 font-bold">🏢 TEMPLATE 3:</span>
+        <span class="text-slate-300">Modelo <strong>Clean Minimalista</strong> (Estilo Concessionária Oficial e Frotas)</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="text-slate-400 text-[11px] hidden md:inline">Alternar Visual:</span>
+        <a href="index.html" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-2.5 py-1 rounded text-[11px] transition">🚗 Modelo Moderno</a>
+        <a href="template-luxo.html" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-2.5 py-1 rounded text-[11px] transition">💎 Modelo Luxo</a>
+        <span class="bg-blue-600 text-white font-bold px-2.5 py-1 rounded text-[11px]">🏢 Modelo Clean</span>
+        <a href="admin.html" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold px-2.5 py-1 rounded text-[11px] transition ml-2">Painel Gestor ⚙️</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- CABEÇALHO CLEAN MINIMALISTA                                              -->
+  <!-- ========================================================================= -->
+  <header class="bg-white border-b border-slate-100 sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        
+        <a href="template-clean.html" class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-slate-900 rounded-lg flex items-center justify-center text-white font-black text-lg">
+            ✓
+          </div>
+          <div>
+            <span class="text-xl font-bold tracking-tight text-slate-900 block">
+              AUTOPRIME <span class="text-xs font-normal text-slate-500">CERTIFIED</span>
+            </span>
+            <span class="block text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Concessionária Multimarcas</span>
+          </div>
+        </a>
+
+        <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
+          <a href="#estoque" class="hover:text-blue-600 transition">Estoque Certificado</a>
+          <a href="#garantia" class="hover:text-blue-600 transition">Garantia 1 Ano</a>
+          <a href="#contato" class="hover:text-blue-600 transition">Showroom</a>
+        </nav>
+
+        <div class="flex items-center gap-3">
+          <a href="admin.html" class="hidden sm:inline-flex text-xs font-semibold text-slate-600 hover:text-slate-900 px-3 py-2">
+            Acesso Lojista
+          </a>
+          <a href="#estoque" class="bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs px-4 py-2.5 rounded-lg transition shadow-sm">
+            Consultar Estoque
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- HERO MINIMALISTA                                                          -->
+  <!-- ========================================================================= -->
+  <section class="bg-white py-14 sm:py-20 border-b border-slate-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="max-w-3xl space-y-4">
+        <span class="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-3 py-1 rounded-md">
+          Estoque 100% Inspecionado
+        </span>
+        <h1 class="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
+          Transparência na compra do seu próximo veículo.
+        </h1>
+        <p class="text-base text-slate-600 max-w-2xl font-normal leading-relaxed">
+          Histórico comprovado em laudo cautelar, sem surpresas e com avaliação justa no seu carro usado.
+        </p>
+      </div>
+
+      <!-- Barra de Filtros Direta -->
+      <div class="mt-8 pt-6 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-4 gap-3 max-w-4xl">
+        <div class="sm:col-span-2">
+          <input type="text" id="filtro-termo" placeholder="Digite modelo ou marca (ex: Corolla, Compass...)" class="w-full bg-slate-50 text-slate-800 text-xs sm:text-sm rounded-lg px-4 py-3 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        <div>
+          <select id="filtro-marca" class="w-full bg-slate-50 text-slate-800 text-xs sm:text-sm rounded-lg px-3 py-3 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="">Todas as Marcas</option>
+          </select>
+        </div>
+        <div>
+          <button id="btn-aplicar-busca" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm py-3 px-4 rounded-lg transition shadow-sm">
+            Buscar Veículos
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- ESTOQUE DE VEÍCULOS                                                       -->
+  <!-- ========================================================================= -->
+  <section id="estoque" class="py-14 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex-1 w-full">
+    
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+      <div>
+        <h2 class="text-2xl font-bold text-slate-900">Catálogo de Seminovos</h2>
+        <p id="estoque-contador" class="text-xs text-slate-500 mt-0.5">Carregando catálogo...</p>
+      </div>
+
+      <div class="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl">
+        <button data-status-filter="todos" class="status-filter-btn active bg-white text-slate-900 text-xs font-bold px-3 py-1.5 rounded-lg shadow-sm transition">
+          Todos
+        </button>
+        <button data-status-filter="disponivel" class="status-filter-btn text-slate-600 hover:text-slate-900 text-xs font-semibold px-3 py-1.5 rounded-lg transition">
+          Disponíveis
+        </button>
+        <button data-status-filter="vendido" class="status-filter-btn text-slate-600 hover:text-slate-900 text-xs font-semibold px-3 py-1.5 rounded-lg transition">
+          Vendidos
+        </button>
+      </div>
+    </div>
+
+    <!-- Grid de Carros (Consome db.js) -->
+    <div id="grid-carros" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+
+    <div id="sem-resultados" class="hidden text-center py-16 bg-white rounded-2xl border border-slate-200 p-8">
+      <h3 class="text-base font-bold text-slate-800">Nenhum veículo encontrado</h3>
+      <p class="text-xs text-slate-500 mt-1">Experimente remover os filtros para visualizar os outros carros disponíveis.</p>
+      <button id="btn-limpar-filtros" class="mt-4 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs px-4 py-2 rounded-lg transition">
+        Ver Todos os Veículos
+      </button>
+    </div>
+
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL DE DETALHES DO VEÍCULO (Com Galeria Interativa)                     -->
+  <!-- ========================================================================= -->
+  <div id="modal-veiculo" class="fixed inset-0 z-50 hidden overflow-y-auto">
+    <div class="modal-backdrop fixed inset-0 transition-opacity"></div>
+    <div class="min-h-screen px-4 text-center flex items-center justify-center py-8">
+      
+      <div class="relative bg-white rounded-2xl max-w-3xl w-full mx-auto text-left shadow-2xl overflow-hidden z-10 transition-all border border-slate-200">
+        
+        <button id="btn-fechar-modal" class="absolute top-4 right-4 z-20 bg-slate-900/60 hover:bg-slate-900 text-white rounded-full p-2 transition">
+          ✕
+        </button>
+
+        <!-- Galeria Interativa -->
+        <div class="relative h-64 sm:h-96 w-full bg-slate-900 group">
+          <img id="modal-foto" src="" alt="" class="w-full h-full object-cover transition-opacity duration-300">
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-transparent to-transparent pointer-events-none"></div>
+
+          <div class="absolute top-4 left-4 z-20 bg-slate-950/70 backdrop-blur-md text-white font-semibold text-xs px-2.5 py-1 rounded-full border border-white/20">
+            <span id="modal-foto-contador">1 de 1</span>
+          </div>
+
+          <button id="modal-btn-prev" class="absolute left-3 top-1/2 -translate-y-1/2 z-20 bg-slate-900/70 hover:bg-slate-900 text-white rounded-full p-2.5 transition shadow-lg">
+            ←
+          </button>
+          <button id="modal-btn-next" class="absolute right-3 top-1/2 -translate-y-1/2 z-20 bg-slate-900/70 hover:bg-slate-900 text-white rounded-full p-2.5 transition shadow-lg">
+            →
+          </button>
+
+          <div class="absolute bottom-4 left-6 right-6 flex items-end justify-between pointer-events-none">
+            <div>
+              <span id="modal-badge-status" class="badge-status badge-disponivel mb-2">Disponível</span>
+              <h3 id="modal-titulo" class="text-xl sm:text-2xl font-black text-white"></h3>
+              <p id="modal-subtitulo" class="text-xs sm:text-sm text-slate-300 font-medium"></p>
+            </div>
+            <div class="text-right">
+              <span class="text-xs text-slate-300 block font-medium">Preço à Vista</span>
+              <span id="modal-preco" class="text-2xl sm:text-3xl font-extrabold text-white"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Faixa de Miniaturas -->
+        <div id="modal-thumbs-container" class="bg-slate-900/95 px-4 py-2.5 border-t border-slate-800 overflow-x-auto">
+          <div id="modal-thumbs-strip" class="flex items-center gap-2"></div>
+        </div>
+
+        <div class="p-6 sm:p-8 space-y-6">
+          
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-4 rounded-xl border border-slate-200 text-center">
+            <div>
+              <span class="block text-[11px] font-semibold text-slate-500 uppercase">Ano Modelo</span>
+              <span id="modal-ano" class="font-bold text-slate-800 text-sm"></span>
+            </div>
+            <div>
+              <span class="block text-[11px] font-semibold text-slate-500 uppercase">Quilometragem</span>
+              <span id="modal-km" class="font-bold text-slate-800 text-sm"></span>
+            </div>
+            <div>
+              <span class="block text-[11px] font-semibold text-slate-500 uppercase">Câmbio</span>
+              <span id="modal-cambio" class="font-bold text-slate-800 text-sm"></span>
+            </div>
+            <div>
+              <span class="block text-[11px] font-semibold text-slate-500 uppercase">Combustível</span>
+              <span id="modal-combustivel" class="font-bold text-slate-800 text-sm"></span>
+            </div>
+          </div>
+
+          <div>
+            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Sobre este Veículo</h4>
+            <p id="modal-descricao" class="text-sm text-slate-700 leading-relaxed"></p>
+          </div>
+
+          <div>
+            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Equipamentos e Opcionais</h4>
+            <div id="modal-opcionais" class="flex flex-wrap gap-2"></div>
+          </div>
+
+          <div class="bg-blue-50 border border-blue-100 rounded-xl p-4">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-blue-900 mb-2">Simulação de Financiamento</h4>
+            <div class="grid grid-cols-2 gap-3 text-center">
+              <div class="bg-white p-3 rounded-lg border border-blue-200">
+                <span class="block text-xs text-slate-500 font-medium">Plano 36x</span>
+                <span id="modal-sim-36" class="text-sm font-extrabold text-blue-700"></span>
+              </div>
+              <div class="bg-white p-3 rounded-lg border border-blue-200">
+                <span class="block text-xs text-slate-500 font-medium">Plano 48x</span>
+                <span id="modal-sim-48" class="text-sm font-extrabold text-blue-700"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-2">
+            <a id="modal-btn-whatsapp" href="#" target="_blank" rel="noopener noreferrer" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 px-6 rounded-xl transition flex items-center justify-center gap-2 shadow-lg">
+              <span>Conversar com Consultor no WhatsApp</span>
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- RODAPÉ -->
+  <footer id="contato" class="bg-white border-t border-slate-100 py-10 text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div>
+        <strong class="text-slate-900 font-bold">AutoPrime Certified</strong> — Todos os veículos com garantia e vistoria cautelar.
+      </div>
+      <div class="flex items-center gap-4">
+        <a href="admin.html" class="hover:text-slate-900 transition font-semibold">Painel do Lojista</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Widget Flutuante WhatsApp Inteligente -->
+  <div id="whatsapp-widget" class="wa-widget" aria-label="Atendimento via WhatsApp">
+    <a id="wa-link" href="#" target="_blank" rel="noopener noreferrer" class="wa-btn">
+      <div class="wa-icon-container">
+        <svg class="wa-icon" viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+          <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 14.99 3.81 13.47 3.81 11.91C3.81 7.37 7.5 3.67 12.05 3.67Z"/>
+        </svg>
+        <span id="wa-status-dot" class="wa-status-dot online"></span>
+      </div>
+      <div class="wa-text-box">
+        <span class="wa-title">Consultor de Vendas</span>
+        <span id="wa-status-text" class="wa-status-text">Online Agora</span>
+      </div>
+    </a>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/db.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

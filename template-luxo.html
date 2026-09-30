@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoPrime Black Edition | Boutique de Veículos Exclusivos</title>
+  <meta name="description" content="Veículos de alta performance e ultra luxo. Curadoria exclusiva com procedência rigorosa.">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Cormorant Garamond & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Estilos Customizados -->
+  <link rel="stylesheet" href="css/style.css">
+  
+  <style>
+    .font-serif-luxury {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+    }
+    .gold-gradient-text {
+      background: linear-gradient(135deg, #fce0ad 0%, #dfac6c 50%, #c68b45 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .gold-border {
+      border-color: rgba(212, 175, 55, 0.3);
+    }
+    .luxury-card {
+      background: #111622;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .luxury-card:hover {
+      border-color: rgba(223, 172, 108, 0.4);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
+    }
+  </style>
+</head>
+<body class="bg-[#0b0f17] text-slate-200 font-sans antialiased min-h-screen flex flex-col">
+
+  <!-- ========================================================================= -->
+  <!-- BARRA SELETORA DE TEMPLATES (Para você alternar na frente do cliente)     -->
+  <!-- ========================================================================= -->
+  <div class="bg-black/90 text-white border-b border-amber-500/30 px-4 py-2 text-xs">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+      <div class="flex items-center gap-2">
+        <span class="text-amber-400 font-bold">💎 TEMPLATE 2:</span>
+        <span class="text-slate-300">Modelo <strong>Dark Luxury / Boutique</strong> (Foco em Importados e Veículos Premium)</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="text-slate-400 text-[11px] hidden md:inline">Alternar Visual:</span>
+        <a href="index.html" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-2.5 py-1 rounded text-[11px] transition">🚗 Modelo Moderno</a>
+        <span class="bg-amber-500 text-black font-bold px-2.5 py-1 rounded text-[11px]">💎 Modelo Luxo</span>
+        <a href="template-clean.html" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-2.5 py-1 rounded text-[11px] transition">🏢 Modelo Clean</a>
+        <a href="admin.html" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-2.5 py-1 rounded text-[11px] transition ml-2">Painel Gestor ⚙️</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- CABEÇALHO BOUTIQUE DE LUXO                                               -->
+  <!-- ========================================================================= -->
+  <header class="bg-[#0b0f17]/90 backdrop-blur-md border-b border-white/10 sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-24">
+        
+        <!-- Logo Luxury -->
+        <a href="template-luxo.html" class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-200 via-amber-400 to-amber-600 flex items-center justify-center text-black font-serif-luxury font-black text-2xl shadow-lg">
+            A
+          </div>
+          <div>
+            <span class="text-2xl font-serif-luxury tracking-widest text-white block uppercase">
+              AUTOPRIME <span class="text-xs font-sans font-bold tracking-widest text-amber-400 border border-amber-400/40 px-1.5 py-0.5 rounded ml-1">BLACK</span>
+            </span>
+            <span class="block text-[10px] font-medium tracking-[3px] text-amber-200/60 uppercase">Boutique Automotiva</span>
+          </div>
+        </a>
+
+        <!-- Menu Hiper-Espaçado Editorial -->
+        <nav class="hidden md:flex items-center gap-10 text-xs font-semibold uppercase tracking-[2px] text-slate-400">
+          <a href="#estoque" class="hover:text-amber-300 transition">Coleção</a>
+          <a href="#experiencia" class="hover:text-amber-300 transition">Atendimento Exclusivo</a>
+          <a href="#contato" class="hover:text-amber-300 transition">Private Lounge</a>
+        </nav>
+
+        <!-- CTA Cabeçalho -->
+        <div class="flex items-center gap-3">
+          <a href="admin.html" class="hidden sm:inline-flex items-center gap-2 border border-white/10 hover:border-amber-400/50 bg-white/5 text-slate-300 font-medium px-3.5 py-2 rounded-xl text-xs uppercase tracking-wider transition">
+            Área Restrita
+          </a>
+          <a href="#estoque" class="bg-gradient-to-r from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-bold px-5 py-2.5 rounded-xl text-xs uppercase tracking-wider transition shadow-lg">
+            Ver Coleção
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- HERO CINEMATOGRÁFICO DE LUXO                                             -->
+  <!-- ========================================================================= -->
+  <section class="relative bg-gradient-to-b from-[#0b0f17] via-[#111726] to-[#0b0f17] py-20 sm:py-32 px-4 sm:px-6 lg:px-8 overflow-hidden text-center">
+    
+    <!-- Efeito de Iluminação Dourada Ambiente -->
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-amber-500/10 blur-[130px] rounded-full pointer-events-none"></div>
+
+    <div class="relative max-w-4xl mx-auto space-y-6">
+      
+      <span class="inline-block text-xs font-bold uppercase tracking-[4px] text-amber-400 bg-amber-500/10 border border-amber-500/30 px-4 py-1.5 rounded-full">
+        Curadoria de Alta Performance
+      </span>
+
+      <h1 class="text-4xl sm:text-6xl lg:text-7xl font-serif-luxury font-normal tracking-tight text-white leading-tight">
+        A arte de dirigir o extraordinário.
+      </h1>
+
+      <p class="text-base sm:text-lg text-slate-400 max-w-2xl mx-auto font-light leading-relaxed">
+        Cada exemplar em nosso acervo passa por uma avaliação criteriosa de 150 itens, garantindo quilometragem autêntica, laudo cautelar aprovado e procedência inquestionável.
+      </p>
+
+      <!-- Painel de Busca Discreto Luxury -->
+      <div class="bg-[#141a29]/80 backdrop-blur-md border border-white/10 p-4 rounded-2xl max-w-3xl mx-auto mt-10">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div>
+            <input type="text" id="filtro-termo" placeholder="Buscar por modelo ou marca..." class="w-full bg-[#0b0f17] text-white text-xs rounded-xl px-4 py-3 border border-white/10 focus:ring-1 focus:ring-amber-400 focus:outline-none placeholder-slate-500">
+          </div>
+          <div>
+            <select id="filtro-marca" class="w-full bg-[#0b0f17] text-white text-xs rounded-xl px-4 py-3 border border-white/10 focus:ring-1 focus:ring-amber-400 focus:outline-none">
+              <option value="">Todas as Marcas</option>
+            </select>
+          </div>
+          <div>
+            <button id="btn-aplicar-busca" class="w-full bg-gradient-to-r from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-bold text-xs uppercase tracking-wider py-3 px-4 rounded-xl transition shadow-md">
+              Explorar Coleção
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- CATÁLOGO DE VEÍCULOS (Consome db.js)                                      -->
+  <!-- ========================================================================= -->
+  <section id="estoque" class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex-1 w-full">
+    
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10 pb-6 border-b border-white/10">
+      <div>
+        <span class="text-xs uppercase tracking-[3px] text-amber-400 font-bold block mb-1">Acervo Selecionado</span>
+        <h2 class="text-3xl sm:text-4xl font-serif-luxury text-white">Veículos Disponíveis</h2>
+        <p id="estoque-contador" class="text-xs text-slate-400 mt-1">Carregando acervo...</p>
+      </div>
+
+      <!-- Filtros de Status -->
+      <div class="flex items-center gap-2">
+        <button data-status-filter="todos" class="status-filter-btn active bg-amber-400 text-black px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition">
+          Todos
+        </button>
+        <button data-status-filter="disponivel" class="status-filter-btn bg-slate-900 text-slate-300 hover:bg-slate-800 border border-white/10 px-3.5 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider transition">
+          Disponíveis
+        </button>
+        <button data-status-filter="vendido" class="status-filter-btn bg-slate-900 text-slate-300 hover:bg-slate-800 border border-white/10 px-3.5 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider transition">
+          Vendidos
+        </button>
+      </div>
+    </div>
+
+    <!-- Grid de Carros -->
+    <div id="grid-carros" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Inserido dinamicamente via js/main.js -->
+    </div>
+
+    <!-- Feedback Nenhum Carro -->
+    <div id="sem-resultados" class="hidden text-center py-20 bg-slate-900/50 rounded-3xl border border-white/10 p-8">
+      <h3 class="text-xl font-serif-luxury text-white">Nenhum veículo disponível nesta busca</h3>
+      <p class="text-xs text-slate-400 mt-1">Nossos consultores podem localizar o veículo sob encomenda para você.</p>
+      <button id="btn-limpar-filtros" class="mt-4 bg-amber-400 hover:bg-amber-300 text-black font-bold text-xs uppercase tracking-wider px-5 py-2.5 rounded-xl transition">
+        Ver Todo o Acervo
+      </button>
+    </div>
+
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL DE DETALHES DO VEÍCULO (Com Galeria Interativa)                     -->
+  <!-- ========================================================================= -->
+  <div id="modal-veiculo" class="fixed inset-0 z-50 hidden overflow-y-auto">
+    <div class="modal-backdrop fixed inset-0 transition-opacity"></div>
+    <div class="min-h-screen px-4 text-center flex items-center justify-center py-8">
+      
+      <div class="relative bg-[#111622] rounded-3xl max-w-3xl w-full mx-auto text-left shadow-2xl overflow-hidden z-10 transition-all border border-amber-500/30 text-white">
+        
+        <button id="btn-fechar-modal" class="absolute top-4 right-4 z-20 bg-black/70 hover:bg-black text-white rounded-full p-2.5 transition border border-white/20">
+          ✕
+        </button>
+
+        <!-- Galeria Interativa -->
+        <div class="relative h-72 sm:h-96 w-full bg-black group">
+          <img id="modal-foto" src="" alt="" class="w-full h-full object-cover transition-opacity duration-300">
+          <div class="absolute inset-0 bg-gradient-to-t from-[#111622] via-transparent to-transparent pointer-events-none"></div>
+
+          <div class="absolute top-4 left-4 z-20 bg-black/70 backdrop-blur-md text-amber-300 font-semibold text-xs px-3 py-1 rounded-full border border-amber-400/30">
+            <span id="modal-foto-contador">1 de 1</span>
+          </div>
+
+          <button id="modal-btn-prev" class="absolute left-3 top-1/2 -translate-y-1/2 z-20 bg-black/80 hover:bg-black text-amber-300 rounded-full p-3 transition border border-white/20">
+            ←
+          </button>
+          <button id="modal-btn-next" class="absolute right-3 top-1/2 -translate-y-1/2 z-20 bg-black/80 hover:bg-black text-amber-300 rounded-full p-3 transition border border-white/20">
+            →
+          </button>
+
+          <div class="absolute bottom-4 left-6 right-6 flex items-end justify-between pointer-events-none">
+            <div>
+              <span id="modal-badge-status" class="badge-status badge-disponivel mb-2">Disponível</span>
+              <h3 id="modal-titulo" class="text-2xl sm:text-3xl font-serif-luxury text-white"></h3>
+              <p id="modal-subtitulo" class="text-xs text-slate-300 font-medium"></p>
+            </div>
+            <div class="text-right">
+              <span class="text-[10px] text-amber-300/80 block uppercase tracking-widest">Valor do Veículo</span>
+              <span id="modal-preco" class="text-2xl sm:text-3xl font-serif-luxury font-bold text-amber-400"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Faixa de Miniaturas -->
+        <div id="modal-thumbs-container" class="bg-black/90 px-4 py-3 border-y border-white/10 overflow-x-auto">
+          <div id="modal-thumbs-strip" class="flex items-center gap-2.5"></div>
+        </div>
+
+        <div class="p-6 sm:p-8 space-y-6">
+          
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-black/40 p-4 rounded-2xl border border-white/10 text-center">
+            <div>
+              <span class="block text-[10px] uppercase tracking-wider text-slate-400">Ano</span>
+              <span id="modal-ano" class="font-bold text-white text-sm"></span>
+            </div>
+            <div>
+              <span class="block text-[10px] uppercase tracking-wider text-slate-400">Quilometragem</span>
+              <span id="modal-km" class="font-bold text-white text-sm"></span>
+            </div>
+            <div>
+              <span class="block text-[10px] uppercase tracking-wider text-slate-400">Câmbio</span>
+              <span id="modal-cambio" class="font-bold text-white text-sm"></span>
+            </div>
+            <div>
+              <span class="block text-[10px] uppercase tracking-wider text-slate-400">Combustível</span>
+              <span id="modal-combustivel" class="font-bold text-white text-sm"></span>
+            </div>
+          </div>
+
+          <div>
+            <h4 class="text-xs font-bold uppercase tracking-widest text-amber-400 mb-2">Sobre este Exemplar</h4>
+            <p id="modal-descricao" class="text-xs sm:text-sm text-slate-300 leading-relaxed font-light"></p>
+          </div>
+
+          <div>
+            <h4 class="text-xs font-bold uppercase tracking-widest text-amber-400 mb-2">Equipamentos e Opcionais</h4>
+            <div id="modal-opcionais" class="flex flex-wrap gap-2"></div>
+          </div>
+
+          <!-- Estimativa de Pagamento -->
+          <div class="bg-black/40 border border-amber-500/20 rounded-2xl p-4">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-amber-300 mb-2">Opções de Financiamento Privado</h4>
+            <div class="grid grid-cols-2 gap-3 text-center">
+              <div class="bg-[#141a29] p-3 rounded-xl border border-white/10">
+                <span class="block text-[11px] text-slate-400">Plano 36x</span>
+                <span id="modal-sim-36" class="text-sm font-bold text-amber-300"></span>
+              </div>
+              <div class="bg-[#141a29] p-3 rounded-xl border border-white/10">
+                <span class="block text-[11px] text-slate-400">Plano 48x</span>
+                <span id="modal-sim-48" class="text-sm font-bold text-amber-300"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-2">
+            <a id="modal-btn-whatsapp" href="#" target="_blank" rel="noopener noreferrer" class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-bold py-4 px-6 rounded-2xl transition flex items-center justify-center gap-2 shadow-xl text-sm uppercase tracking-wider">
+              <span>Agendar Apresentação Exclusiva no WhatsApp</span>
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- RODAPÉ BOUTIQUE                                                           -->
+  <!-- ========================================================================= -->
+  <footer id="contato" class="bg-black text-slate-500 py-12 border-t border-white/10 text-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
+      <div>
+        <span class="text-xl font-serif-luxury text-white tracking-widest uppercase">AUTOPRIME BLACK</span>
+        <p class="mt-2 text-slate-400 font-light">Atendimento reservado e consultoria individualizada para aquisição de veículos especiais.</p>
+      </div>
+      <div>
+        <h4 class="text-amber-400 font-bold uppercase tracking-widest mb-2">Horário Reservado</h4>
+        <p>Segunda a Sexta: 09:00 às 19:00<br>Sábados: Com agendamento prévio</p>
+      </div>
+      <div>
+        <h4 class="text-amber-400 font-bold uppercase tracking-widest mb-2">Gestão de Acervo</h4>
+        <a href="admin.html" class="text-slate-400 hover:text-white transition">Acessar Painel do Lojista →</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Widget Flutuante WhatsApp Inteligente -->
+  <div id="whatsapp-widget" class="wa-widget" aria-label="Atendimento via WhatsApp">
+    <a id="wa-link" href="#" target="_blank" rel="noopener noreferrer" class="wa-btn">
+      <div class="wa-icon-container">
+        <svg class="wa-icon" viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+          <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 14.99 3.81 13.47 3.81 11.91C3.81 7.37 7.5 3.67 12.05 3.67Z"/>
+        </svg>
+        <span id="wa-status-dot" class="wa-status-dot online"></span>
+      </div>
+      <div class="wa-text-box">
+        <span class="wa-title">Consultor Private</span>
+        <span id="wa-status-text" class="wa-status-text">Online Agora</span>
+      </div>
+    </a>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/db.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
