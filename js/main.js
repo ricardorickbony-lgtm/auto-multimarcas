@@ -116,7 +116,7 @@ function initVitrine() {
 
   // Escuta alterações de outras abas via storage
   window.addEventListener('storage', (e) => {
-    if (e.key === 'auto_multimarcas_estoque_v3' || e.key === 'auto_multimarcas_config_loja_v2') {
+    if (e.key === 'auto_multimarcas_estoque_v4' || e.key === 'auto_multimarcas_estoque_v3' || e.key === 'auto_multimarcas_config_loja_v2') {
       povoarFiltroMarcas();
       renderizarEstoque();
     }

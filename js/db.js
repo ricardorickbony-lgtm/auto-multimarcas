@@ -3,7 +3,7 @@
  * Auto Multimarcas - Padrão Ricardo & Severino
  */
 
-const STORAGE_KEY = 'auto_multimarcas_estoque_v3';
+const STORAGE_KEY = 'auto_multimarcas_estoque_v4';
 const STORAGE_CONFIG_KEY = 'auto_multimarcas_config_loja_v2';
 const STORAGE_SENHA_KEY = 'auto_multimarcas_senha_admin';
 
@@ -24,8 +24,8 @@ const CONFIG_LOJA_PADRAO = {
   horaFimSemana: 18,
   horaInicioSabado: 9,
   horaFimSabado: 14,
-  fotoFachada: 'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=1600&q=80',
-  fotoShowroom: 'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=1200&q=80',
+  fotoFachada: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1920&q=80',
+  fotoShowroom: 'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=1920&q=80',
   webhookMarketplaces: '',
   googleAdsId: '',
   pixelMetaId: ''
@@ -74,11 +74,11 @@ const VEICULOS_INICIAIS = [
     status: 'disponivel',
     destaque: true,
     tags: ['Garantia de Fábrica', 'Laudo Aprovado'],
-    foto: 'https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=900&q=80',
+    foto: 'https://images.unsplash.com/photo-1619767886558-efdc259cde1a?auto=format&fit=crop&w=900&q=80',
     fotos: [
-      'https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=900&q=80',
-      'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=900&q=80',
-      'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=80'
+      'https://images.unsplash.com/photo-1619767886558-efdc259cde1a?auto=format&fit=crop&w=900&q=80',
+      'https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&w=900&q=80',
+      'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=900&q=80'
     ],
     descricao: 'HB20 com motor 1.0 Turbo GDI de 120cv. Super econômico e ágil para o dia a dia. Único dono com todas as revisões feitas na concessionária Hyundai.',
     opcionais: ['Painel Digital Supervision', 'Central BlueMedia 8"', 'Alerta de Colisão Frontal', 'Frenagem Autônoma de Emergência', 'Câmera de Ré', 'Piloto Automático']
@@ -295,10 +295,10 @@ const VEICULOS_INICIAIS = [
     status: 'disponivel',
     destaque: false,
     tags: ['Baixíssimo Km', 'O Mais Econômico do Brasil'],
-    foto: 'https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=900&q=80',
+    foto: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=900&q=80',
     fotos: [
-      'https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=900&q=80',
-      'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=900&q=80'
+      'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=900&q=80',
+      'https://images.unsplash.com/photo-1508974239320-0a029497e820?auto=format&fit=crop&w=900&q=80'
     ],
     descricao: 'Eleito repetidas vezes o carro mais econômico do Brasil pelo Inmetro. Pequeno por fora, ótimo espaço interno e altura livre do solo para buracos e lombadas.',
     opcionais: ['Central Multimídia Media Evolution 8"', 'Câmera de Ré', '4 Airbags (Frontais e Laterais)', 'Luzes Diurnas DRL em LED', 'Computador de Bordo', 'Start-Stop']
