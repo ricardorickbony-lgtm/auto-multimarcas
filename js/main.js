@@ -95,6 +95,84 @@ function aplicarIdentidadeLoja(config) {
       showroomFoto.src = config.fotoFachada;
     }
   }
+
+  // 3. Vídeo Hero da Loja / Showroom (Estilo Concorrente Via Certa)
+  aplicarVideoHero(config);
+}
+
+function extrairIdYoutube(urlOuId) {
+  if (!urlOuId) return null;
+  const str = urlOuId.trim();
+  if (/^[a-zA-Z0-9_-]{11}$/.test(str)) return str;
+  const regExp = /(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/;
+  const match = str.match(regExp);
+  return match ? match[1] : null;
+}
+
+let videoHeroMuted = true;
+
+function aplicarVideoHero(config) {
+  const container = document.getElementById('hero-video-container');
+  if (!container) return;
+
+  const videoParam = (config && config.videoHero) ? config.videoHero.trim() : 'https://www.youtube.com/watch?v=Ml9lIeaBL5U';
+  
+  if (!videoParam) {
+    container.innerHTML = '';
+    return;
+  }
+
+  const ytId = extrairIdYoutube(videoParam);
+
+  if (ytId) {
+    container.innerHTML = `
+      <iframe id="hero-yt-iframe" class="hero-video-element"
+        src="https://www.youtube.com/embed/${ytId}?autoplay=1&mute=1&loop=1&playlist=${ytId}&controls=0&disablekb=1&fs=0&modestbranding=1&rel=0&playsinline=1&iv_load_policy=3&enablejsapi=1"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        frameborder="0"
+        title="Vídeo Showroom da Loja">
+      </iframe>
+    `;
+  } else if (videoParam.includes('.mp4') || videoParam.includes('.webm') || videoParam.includes('blob:')) {
+    container.innerHTML = `
+      <video id="hero-native-video" class="hero-video-element" autoplay muted loop playsinline>
+        <source src="${videoParam}" type="video/mp4">
+      </video>
+    `;
+  }
+
+  configurarControleSomVideo();
+}
+
+function configurarControleSomVideo() {
+  const btn = document.getElementById('btn-toggle-video-sound');
+  if (!btn || btn.dataset.configured === 'true') return;
+  btn.dataset.configured = 'true';
+
+  btn.addEventListener('click', () => {
+    const iframe = document.getElementById('hero-yt-iframe');
+    const nativeVid = document.getElementById('hero-native-video');
+    const icon = document.getElementById('video-sound-icon');
+    const label = document.getElementById('video-sound-label');
+
+    videoHeroMuted = !videoHeroMuted;
+
+    if (nativeVid) {
+      nativeVid.muted = videoHeroMuted;
+    }
+
+    if (iframe && iframe.contentWindow) {
+      const comando = videoHeroMuted ? 'mute' : 'unMute';
+      iframe.contentWindow.postMessage(JSON.stringify({
+        event: 'command',
+        func: comando,
+        args: []
+      }), '*');
+    }
+
+    if (icon) icon.textContent = videoHeroMuted ? '🔇' : '🔊';
+    if (label) label.textContent = videoHeroMuted ? 'Vídeo da Loja' : 'Áudio Ativado';
+  });
 }
 
 function initVitrine() {
@@ -116,7 +194,9 @@ function initVitrine() {
 
   // Escuta alterações de outras abas via storage
   window.addEventListener('storage', (e) => {
-    if (e.key === 'auto_multimarcas_estoque_v4' || e.key === 'auto_multimarcas_estoque_v3' || e.key === 'auto_multimarcas_config_loja_v2') {
+    if (e.key === 'auto_multimarcas_estoque_v4' || e.key === 'auto_multimarcas_config_loja_v3' || e.key === 'auto_multimarcas_config_loja_v2') {
+      const novaConfig = ConfigLojaDB.obterConfig();
+      aplicarIdentidadeLoja(novaConfig);
       povoarFiltroMarcas();
       renderizarEstoque();
     }

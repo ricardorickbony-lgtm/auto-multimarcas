@@ -107,14 +107,29 @@
   <!-- ========================================================================= -->
   <!-- HERO SECTION: IMPACTO VISUAL + FOTO DA LOJA DE FUNDO + BUSCA RÁPIDA       -->
   <!-- ========================================================================= -->
-  <section id="hero-section" class="relative text-white py-16 sm:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden bg-slate-950">
-    <!-- Imagem de Fundo Dinâmica Automotiva Cinematográfica com Efeito de Profundidade no Scroll -->
+  <section id="hero-section" class="relative text-white py-16 sm:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden bg-slate-950 min-h-[580px] flex items-center justify-center">
+    <!-- Camada 1: Imagem Poster de Fundo (Exibição Imediata e Fallback) -->
     <div id="hero-bg-img" class="absolute inset-0 bg-cover bg-center md:bg-fixed transition-all duration-700 opacity-40 scale-105" style="background-image: url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1920&q=80');"></div>
-    <div class="absolute inset-0 bg-gradient-to-b from-slate-950/85 via-slate-950/50 to-slate-950/95 pointer-events-none"></div>
+    
+    <!-- Camada 2: Container do Vídeo da Loja / Showroom (Estilo Concorrente Via Certa) -->
+    <div id="hero-video-container" class="hero-video-wrapper"></div>
+    
+    <!-- Camada 3: Scrim / Gradiente Cinematográfico para Alta Legibilidade dos Textos -->
+    <div class="hero-video-scrim pointer-events-none"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-slate-950/85 via-slate-950/50 to-slate-950/95 pointer-events-none z-[3]"></div>
     <!-- Padrão sutil de fundo -->
-    <div class="absolute inset-0 opacity-15 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] [background-size:20px_20px] pointer-events-none"></div>
+    <div class="absolute inset-0 opacity-15 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] [background-size:20px_20px] pointer-events-none z-[3]"></div>
 
-    <div class="relative max-w-5xl mx-auto text-center space-y-6 z-10">
+    <!-- Badge Interativo de Status do Vídeo e Controle de Som no Canto Inferior -->
+    <div class="absolute bottom-3 right-3 sm:bottom-5 sm:right-6 z-20 flex items-center gap-2">
+      <button id="btn-toggle-video-sound" class="hero-video-badge cursor-pointer hover:scale-105 active:scale-95 transition shadow-lg" title="Clique para alternar o som do vídeo">
+        <span id="video-sound-icon">🔇</span>
+        <span id="video-sound-label" class="hidden sm:inline">Vídeo da Loja</span>
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse ml-0.5"></span>
+      </button>
+    </div>
+
+    <div class="relative max-w-5xl mx-auto text-center space-y-6 z-10 w-full">
       
       <div class="inline-flex items-center gap-2 bg-blue-500/20 border border-blue-400/30 text-blue-300 text-xs sm:text-sm font-semibold px-4 py-1.5 rounded-full">
         <span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>

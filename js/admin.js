@@ -544,6 +544,8 @@ function configurarConfigLoja() {
     document.getElementById('config-endereco').value = config.endereco || '';
     const inputFoto = document.getElementById('config-foto-fachada');
     if (inputFoto) inputFoto.value = config.fotoFachada || '';
+    const inputVideo = document.getElementById('config-video-hero');
+    if (inputVideo) inputVideo.value = config.videoHero || 'https://www.youtube.com/watch?v=Ml9lIeaBL5U';
     const inputHorarioSemana = document.getElementById('config-horario-semana');
     if (inputHorarioSemana) inputHorarioSemana.value = config.horarioSemana || 'Segunda a Sexta: 08:00 às 18:00';
     const inputHorarioSabado = document.getElementById('config-horario-sabado');
@@ -574,6 +576,7 @@ function configurarConfigLoja() {
         telefone: document.getElementById('config-telefone').value.trim(),
         endereco: document.getElementById('config-endereco').value.trim(),
         fotoFachada: document.getElementById('config-foto-fachada')?.value.trim() || '',
+        videoHero: document.getElementById('config-video-hero')?.value.trim() || '',
         horarioSemana: document.getElementById('config-horario-semana')?.value.trim() || 'Segunda a Sexta: 08:00 às 18:00',
         horarioSabado: document.getElementById('config-horario-sabado')?.value.trim() || 'Sábados: 09:00 às 14:00',
         googleAdsId: document.getElementById('config-google-ads')?.value.trim() || '',
@@ -582,7 +585,7 @@ function configurarConfigLoja() {
 
       ConfigLojaDB.salvarConfig(novosDados);
       fechar();
-      mostrarToast('✓ Identidade, Ficha do Google e Remarketing atualizados com sucesso!');
+      mostrarToast('✓ Identidade, Vídeo do Cabeçalho e Configurações salvas!');
     });
   }
 }
