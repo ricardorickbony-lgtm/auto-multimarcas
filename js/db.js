@@ -4,7 +4,7 @@
  */
 
 const STORAGE_KEY = 'auto_multimarcas_estoque_v4';
-const STORAGE_CONFIG_KEY = 'auto_multimarcas_config_loja_v3';
+const STORAGE_CONFIG_KEY = 'auto_multimarcas_config_loja_v4';
 const STORAGE_SENHA_KEY = 'auto_multimarcas_senha_admin';
 
 // Configurações Padrão de Identidade Visual da Loja (White-Label)
@@ -26,7 +26,7 @@ const CONFIG_LOJA_PADRAO = {
   horaFimSabado: 14,
   fotoFachada: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1920&q=80',
   fotoShowroom: 'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=1920&q=80',
-  videoHero: 'https://www.youtube.com/watch?v=Ml9lIeaBL5U', // Vídeo Showroom de Destaque da Loja em Alta Resolução (Estilo Concorrente)
+  videoHero: 'https://www.youtube.com/watch?v=9JfFt3t7OfE', // Vídeo de Apresentação Automotiva em Alta Resolução
   webhookMarketplaces: '',
   googleAdsId: '',
   pixelMetaId: ''

@@ -96,7 +96,7 @@ function aplicarIdentidadeLoja(config) {
     }
   }
 
-  // 3. Vídeo Hero da Loja / Showroom (Estilo Concorrente Via Certa)
+  // 3. Vídeo Hero da Loja / Showroom em Alta Resolução
   aplicarVideoHero(config);
 }
 
@@ -115,7 +115,7 @@ function aplicarVideoHero(config) {
   const container = document.getElementById('hero-video-container');
   if (!container) return;
 
-  const videoParam = (config && config.videoHero) ? config.videoHero.trim() : 'https://www.youtube.com/watch?v=Ml9lIeaBL5U';
+  const videoParam = (config && config.videoHero) ? config.videoHero.trim() : 'https://www.youtube.com/watch?v=9JfFt3t7OfE';
   
   if (!videoParam) {
     container.innerHTML = '';
@@ -125,6 +125,11 @@ function aplicarVideoHero(config) {
   const ytId = extrairIdYoutube(videoParam);
 
   if (ytId) {
+    const iframeExistente = document.getElementById('hero-yt-iframe');
+    if (iframeExistente && iframeExistente.src.includes(ytId)) {
+      configurarControleSomVideo();
+      return;
+    }
     container.innerHTML = `
       <iframe id="hero-yt-iframe" class="hero-video-element"
         src="https://www.youtube.com/embed/${ytId}?autoplay=1&mute=1&loop=1&playlist=${ytId}&controls=0&disablekb=1&fs=0&modestbranding=1&rel=0&playsinline=1&iv_load_policy=3&enablejsapi=1"
@@ -194,7 +199,7 @@ function initVitrine() {
 
   // Escuta alterações de outras abas via storage
   window.addEventListener('storage', (e) => {
-    if (e.key === 'auto_multimarcas_estoque_v4' || e.key === 'auto_multimarcas_config_loja_v3' || e.key === 'auto_multimarcas_config_loja_v2') {
+    if (e.key === 'auto_multimarcas_estoque_v4' || e.key === 'auto_multimarcas_config_loja_v4' || e.key === 'auto_multimarcas_config_loja_v3' || e.key === 'auto_multimarcas_config_loja_v2') {
       const novaConfig = ConfigLojaDB.obterConfig();
       aplicarIdentidadeLoja(novaConfig);
       povoarFiltroMarcas();

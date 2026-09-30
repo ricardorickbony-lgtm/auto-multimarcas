@@ -545,7 +545,7 @@ function configurarConfigLoja() {
     const inputFoto = document.getElementById('config-foto-fachada');
     if (inputFoto) inputFoto.value = config.fotoFachada || '';
     const inputVideo = document.getElementById('config-video-hero');
-    if (inputVideo) inputVideo.value = config.videoHero || 'https://www.youtube.com/watch?v=Ml9lIeaBL5U';
+    if (inputVideo) inputVideo.value = config.videoHero || 'https://www.youtube.com/watch?v=9JfFt3t7OfE';
     const inputHorarioSemana = document.getElementById('config-horario-semana');
     if (inputHorarioSemana) inputHorarioSemana.value = config.horarioSemana || 'Segunda a Sexta: 08:00 às 18:00';
     const inputHorarioSabado = document.getElementById('config-horario-sabado');

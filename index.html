@@ -111,8 +111,15 @@
     <!-- Camada 1: Imagem Poster de Fundo (Exibição Imediata e Fallback) -->
     <div id="hero-bg-img" class="absolute inset-0 bg-cover bg-center md:bg-fixed transition-all duration-700 opacity-40 scale-105" style="background-image: url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1920&q=80');"></div>
     
-    <!-- Camada 2: Container do Vídeo da Loja / Showroom (Estilo Concorrente Via Certa) -->
-    <div id="hero-video-container" class="hero-video-wrapper"></div>
+    <!-- Camada 2: Container do Vídeo da Loja / Showroom em Alta Resolução -->
+    <div id="hero-video-container" class="hero-video-wrapper">
+      <iframe id="hero-yt-iframe" class="hero-video-element"
+        src="https://www.youtube.com/embed/9JfFt3t7OfE?autoplay=1&mute=1&loop=1&playlist=9JfFt3t7OfE&controls=0&disablekb=1&fs=0&modestbranding=1&rel=0&playsinline=1&iv_load_policy=3&enablejsapi=1"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        frameborder="0"
+        title="Vídeo Showroom da Loja">
+      </iframe>
+    </div>
     
     <!-- Camada 3: Scrim / Gradiente Cinematográfico para Alta Legibilidade dos Textos -->
     <div class="hero-video-scrim pointer-events-none"></div>
