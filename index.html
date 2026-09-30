@@ -111,17 +111,21 @@
   </header>
 
   <!-- ========================================================================= -->
-  <!-- HERO SECTION: IMPACTO VISUAL + BUSCA RÁPIDA                               -->
   <!-- ========================================================================= -->
-  <section class="relative bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white py-16 sm:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
+  <!-- HERO SECTION: IMPACTO VISUAL + FOTO DA LOJA DE FUNDO + BUSCA RÁPIDA       -->
+  <!-- ========================================================================= -->
+  <section id="hero-section" class="relative text-white py-16 sm:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden bg-slate-950">
+    <!-- Imagem de Fundo Dinâmica da Fachada / Loja Física com Overlay Escuro de Alta Legibilidade -->
+    <div id="hero-bg-img" class="absolute inset-0 bg-cover bg-center transition-all duration-700 opacity-20 scale-105" style="background-image: url('https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=1600&q=80');"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-slate-950/90 via-slate-900/85 to-slate-950/95 pointer-events-none"></div>
     <!-- Padrão sutil de fundo -->
-    <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] [background-size:16px_16px]"></div>
+    <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none"></div>
 
-    <div class="relative max-w-5xl mx-auto text-center space-y-6">
+    <div class="relative max-w-5xl mx-auto text-center space-y-6 z-10">
       
       <div class="inline-flex items-center gap-2 bg-blue-500/20 border border-blue-400/30 text-blue-300 text-xs sm:text-sm font-semibold px-4 py-1.5 rounded-full">
         <span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
-        Mais de 10 anos de tradição em veículos premium e seminovos
+        Mais de 10 anos de tradição em seminovos e populares com procedência
       </div>
 
       <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight">
@@ -130,7 +134,7 @@
       </h1>
 
       <p class="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto font-normal">
-        Estoque 100% periciado com laudo cautelar aprovado, garantia estendida e a melhor avaliação do seu seminovo na troca.
+        Os carros mais vendidos do Brasil 100% periciados com laudo cautelar aprovado, garantia estendida e a melhor avaliação do seu usado na troca.
       </p>
 
       <!-- Painel de Busca Rápida -->
@@ -140,7 +144,7 @@
           <!-- Busca por texto -->
           <div class="lg:col-span-1">
             <label class="block text-xs font-semibold text-slate-300 mb-1">Buscar Modelo</label>
-            <input type="text" id="filtro-termo" placeholder="Ex: Compass, BMW, Corolla..." class="w-full bg-white text-slate-800 text-sm rounded-lg px-3 py-2.5 border-0 focus:ring-2 focus:ring-blue-500 placeholder-slate-400">
+            <input type="text" id="filtro-termo" placeholder="Ex: Onix, HB20, Polo, Strada, Creta..." class="w-full bg-white text-slate-800 text-sm rounded-lg px-3 py-2.5 border-0 focus:ring-2 focus:ring-blue-500 placeholder-slate-400">
           </div>
 
           <!-- Filtro Marca -->
@@ -156,10 +160,10 @@
             <label class="block text-xs font-semibold text-slate-300 mb-1">Carroceria</label>
             <select id="filtro-carroceria" class="w-full bg-white text-slate-800 text-sm rounded-lg px-3 py-2.5 border-0 focus:ring-2 focus:ring-blue-500">
               <option value="">Todas as Categorias</option>
+              <option value="Hatch">Hatch</option>
               <option value="SUV">SUV</option>
               <option value="Sedan">Sedan</option>
               <option value="Picape">Picape</option>
-              <option value="Hatch">Hatch</option>
             </select>
           </div>
 
@@ -178,49 +182,49 @@
   </section>
 
   <!-- ========================================================================= -->
-  <!-- CATEGORIAS EM DESTAQUE (Inspirado no estilo visual de vitrines premium)  -->
+  <!-- CATEGORIAS EM DESTAQUE (Carros Populares e Seminovos Campeões de Venda)     -->
   <!-- ========================================================================= -->
   <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-20 mb-8">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
       
-      <!-- Card 1: Seminovos Selecionados -->
-      <div class="category-feature-card group" data-filtro-categoria="Sedan">
-        <img src="https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?auto=format&fit=crop&w=800&q=80" alt="Seminovos" class="bg-img">
+      <!-- Card 1: Hatches & Compactos Econômicos -->
+      <div class="category-feature-card group" data-filtro-categoria="Hatch">
+        <img src="https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=800&q=80" alt="Hatches Econômicos" class="bg-img">
         <div class="category-feature-overlay"></div>
         <div class="relative z-10 text-white">
-          <span class="inline-block bg-blue-600 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded mb-1">100% Periciados</span>
-          <h3 class="text-xl font-extrabold text-white">Seminovos Selecionados</h3>
-          <p class="text-xs text-slate-300 mt-0.5">Sedans, Hatches e Compactos com Laudo Cautelar Aprovado.</p>
+          <span class="inline-block bg-blue-600 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded mb-1">Economia & Dia a Dia</span>
+          <h3 class="text-xl font-extrabold text-white">Hatches & Compactos</h3>
+          <p class="text-xs text-slate-300 mt-0.5">Onix, HB20, Polo, Mobi e Kwid. Baixo consumo e manutenção acessível.</p>
           <span class="inline-flex items-center gap-1 text-xs font-bold text-blue-400 group-hover:text-blue-300 mt-2">
-            Ver Seminovos →
+            Ver Hatches em Estoque →
           </span>
         </div>
       </div>
 
-      <!-- Card 2: SUVs & Picapes -->
+      <!-- Card 2: SUVs & Picapes Mais Vendidos -->
       <div class="category-feature-card group" data-filtro-categoria="SUV">
-        <img src="https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&w=800&q=80" alt="SUVs e Picapes" class="bg-img">
+        <img src="https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?auto=format&fit=crop&w=800&q=80" alt="SUVs e Picapes" class="bg-img">
         <div class="category-feature-overlay"></div>
         <div class="relative z-10 text-white">
           <span class="inline-block bg-emerald-600 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded mb-1">Espaço & Família</span>
-          <h3 class="text-xl font-extrabold text-white">SUVs & Picapes 4x4</h3>
-          <p class="text-xs text-slate-300 mt-0.5">Compass, Hilux, Ranger, Creta e Nivus para qualquer terreno.</p>
+          <h3 class="text-xl font-extrabold text-white">SUVs & Picapes</h3>
+          <p class="text-xs text-slate-300 mt-0.5">T-Cross, Creta, Renegade, Strada e Pulse. Robustez e conforto.</p>
           <span class="inline-flex items-center gap-1 text-xs font-bold text-emerald-400 group-hover:text-emerald-300 mt-2">
             Ver SUVs e Picapes →
           </span>
         </div>
       </div>
 
-      <!-- Card 3: Nacionais & Importados Premium -->
-      <div class="category-feature-card group" data-filtro-categoria="luxo">
-        <img src="https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=800&q=80" alt="Importados" class="bg-img">
+      <!-- Card 3: Sedans Familiares -->
+      <div class="category-feature-card group" data-filtro-categoria="Sedan">
+        <img src="https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?auto=format&fit=crop&w=800&q=80" alt="Sedans Familiares" class="bg-img">
         <div class="category-feature-overlay"></div>
         <div class="relative z-10 text-white">
-          <span class="inline-block bg-amber-500 text-slate-950 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded mb-1">Coleção Exclusiva</span>
-          <h3 class="text-xl font-extrabold text-white">Importados & Performance</h3>
-          <p class="text-xs text-slate-300 mt-0.5">BMW M Sport, Porsche Macan, Mercedes AMG e Audi.</p>
+          <span class="inline-block bg-amber-500 text-slate-950 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded mb-1">Porta-Malas & Conforto</span>
+          <h3 class="text-xl font-extrabold text-white">Sedans Familiares</h3>
+          <p class="text-xs text-slate-300 mt-0.5">Onix Plus, Corolla, Cronos e Versa. Espaço amplo para viagens.</p>
           <span class="inline-flex items-center gap-1 text-xs font-bold text-amber-400 group-hover:text-amber-300 mt-2">
-            Ver Importados →
+            Ver Sedans em Estoque →
           </span>
         </div>
       </div>
@@ -532,11 +536,21 @@
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-white p-4 sm:p-6 rounded-3xl border border-slate-200 shadow-sm">
         
         <!-- Detalhes do Showroom -->
-        <div class="lg:col-span-5 space-y-5 p-2 sm:p-4">
+        <div class="lg:col-span-5 space-y-4 p-2 sm:p-4">
+          <!-- Foto da Fachada / Loja Física Real -->
+          <div class="relative h-44 rounded-2xl overflow-hidden border border-slate-200 shadow-sm group">
+            <img id="showroom-foto-loja" src="https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=800&q=80" alt="Fachada da Loja" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent"></div>
+            <div class="absolute bottom-2.5 left-3 right-3 flex items-center justify-between text-white text-xs font-bold">
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-400"></span> Showroom Físico Aberto</span>
+              <span class="text-[10px] bg-slate-900/80 px-2 py-0.5 rounded border border-white/20">Estacionamento Próprio</span>
+            </div>
+          </div>
+
           <div>
             <h4 id="showroom-store-name" class="font-bold text-slate-900 text-base mb-1">AutoPrime Multimarcas</h4>
             <p id="mapa-endereco-texto" class="text-xs text-slate-600 leading-relaxed">
-              Av. das Américas, 4500 - Barra da Tijuca, Rio de Janeiro - RJ
+              Av. Dom Pedro I, 1553 - Vila Pires, Santo André - SP
             </p>
           </div>
 

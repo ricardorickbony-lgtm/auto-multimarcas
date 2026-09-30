@@ -337,24 +337,25 @@ function configurarFormulario() {
 
   // Pacotes de fotos prontas de teste
   const pacotesDemo = {
-    compass: [
-      'https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&w=900&q=80',
-      'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=900&q=80',
-      'https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=900&q=80'
-    ],
-    bmw: [
-      'https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=900&q=80',
-      'https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=900&q=80',
+    onix: [
+      'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=900&q=80',
+      'https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&w=900&q=80',
       'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=900&q=80'
     ],
-    porsche: [
-      'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=80',
-      'https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=900&q=80',
-      'https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=900&q=80'
+    hb20: [
+      'https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=900&q=80',
+      'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=900&q=80',
+      'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=80'
     ],
-    hilux: [
+    polo: [
+      'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=900&q=80',
+      'https://images.unsplash.com/photo-1508974239320-0a029497e820?auto=format&fit=crop&w=900&q=80',
+      'https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=900&q=80'
+    ],
+    strada: [
       'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=900&q=80',
-      'https://images.unsplash.com/photo-1559416523-140ddc3d238c?auto=format&fit=crop&w=900&q=80'
+      'https://images.unsplash.com/photo-1559416523-140ddc3d238c?auto=format&fit=crop&w=900&q=80',
+      'https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=900&q=80'
     ]
   };
 
@@ -518,6 +519,8 @@ function configurarConfigLoja() {
     document.getElementById('config-whatsapp').value = config.whatsapp || '';
     document.getElementById('config-telefone').value = config.telefone || '';
     document.getElementById('config-endereco').value = config.endereco || '';
+    const inputFoto = document.getElementById('config-foto-fachada');
+    if (inputFoto) inputFoto.value = config.fotoFachada || '';
     modal.classList.remove('hidden');
   };
 
@@ -538,7 +541,8 @@ function configurarConfigLoja() {
         slogan: document.getElementById('config-slogan-loja').value.trim(),
         whatsapp: document.getElementById('config-whatsapp').value.trim(),
         telefone: document.getElementById('config-telefone').value.trim(),
-        endereco: document.getElementById('config-endereco').value.trim()
+        endereco: document.getElementById('config-endereco').value.trim(),
+        fotoFachada: document.getElementById('config-foto-fachada')?.value.trim() || ''
       };
 
       ConfigLojaDB.salvarConfig(novosDados);

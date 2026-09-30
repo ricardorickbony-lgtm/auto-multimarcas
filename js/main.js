@@ -86,6 +86,18 @@ function aplicarIdentidadeLoja(config) {
   if (pillMailLink && config.email) {
     pillMailLink.href = `mailto:${config.email}`;
   }
+
+  // Foto de fundo da loja (Hero e Showroom)
+  if (config.fotoFachada) {
+    const heroBg = document.getElementById('hero-bg-img');
+    if (heroBg) {
+      heroBg.style.backgroundImage = `url('${config.fotoFachada}')`;
+    }
+    const showroomFoto = document.getElementById('showroom-foto-loja');
+    if (showroomFoto) {
+      showroomFoto.src = config.fotoFachada;
+    }
+  }
 }
 
 function initVitrine() {
@@ -107,7 +119,7 @@ function initVitrine() {
 
   // Escuta alterações de outras abas via storage
   window.addEventListener('storage', (e) => {
-    if (e.key === 'auto_multimarcas_estoque_v2' || e.key === 'auto_multimarcas_config_loja_v1') {
+    if (e.key === 'auto_multimarcas_estoque_v3' || e.key === 'auto_multimarcas_config_loja_v2') {
       povoarFiltroMarcas();
       renderizarEstoque();
     }
