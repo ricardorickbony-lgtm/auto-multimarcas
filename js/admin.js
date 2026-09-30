@@ -544,6 +544,14 @@ function configurarConfigLoja() {
     document.getElementById('config-endereco').value = config.endereco || '';
     const inputFoto = document.getElementById('config-foto-fachada');
     if (inputFoto) inputFoto.value = config.fotoFachada || '';
+    const inputHorarioSemana = document.getElementById('config-horario-semana');
+    if (inputHorarioSemana) inputHorarioSemana.value = config.horarioSemana || 'Segunda a Sexta: 08:00 às 18:00';
+    const inputHorarioSabado = document.getElementById('config-horario-sabado');
+    if (inputHorarioSabado) inputHorarioSabado.value = config.horarioSabado || 'Sábados: 09:00 às 14:00';
+    const inputGoogleAds = document.getElementById('config-google-ads');
+    if (inputGoogleAds) inputGoogleAds.value = config.googleAdsId || '';
+    const inputPixelMeta = document.getElementById('config-pixel-meta');
+    if (inputPixelMeta) inputPixelMeta.value = config.pixelMetaId || '';
     modal.classList.remove('hidden');
   };
 
@@ -565,12 +573,16 @@ function configurarConfigLoja() {
         whatsapp: document.getElementById('config-whatsapp').value.trim(),
         telefone: document.getElementById('config-telefone').value.trim(),
         endereco: document.getElementById('config-endereco').value.trim(),
-        fotoFachada: document.getElementById('config-foto-fachada')?.value.trim() || ''
+        fotoFachada: document.getElementById('config-foto-fachada')?.value.trim() || '',
+        horarioSemana: document.getElementById('config-horario-semana')?.value.trim() || 'Segunda a Sexta: 08:00 às 18:00',
+        horarioSabado: document.getElementById('config-horario-sabado')?.value.trim() || 'Sábados: 09:00 às 14:00',
+        googleAdsId: document.getElementById('config-google-ads')?.value.trim() || '',
+        pixelMetaId: document.getElementById('config-pixel-meta')?.value.trim() || ''
       };
 
       ConfigLojaDB.salvarConfig(novosDados);
       fechar();
-      mostrarToast('✓ Identidade da loja atualizada! A vitrine já reflete as mudanças.');
+      mostrarToast('✓ Identidade, Ficha do Google e Remarketing atualizados com sucesso!');
     });
   }
 }

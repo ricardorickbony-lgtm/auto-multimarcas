@@ -17,11 +17,18 @@ const CONFIG_LOJA_PADRAO = {
   whatsapp: '5511999999999',
   endereco: 'Av. Dom Pedro I, 1553 - Vila Pires, Santo André - SP',
   cidade: 'Santo André - SP',
-  horarioSemana: 'Segunda a Sexta: 08:30 às 18:30',
+  horarioSemana: 'Segunda a Sexta: 08:00 às 18:00',
   horarioSabado: 'Sábados: 09:00 às 14:00',
+  horarioDomingo: 'Domingos e Feriados: Plantão WhatsApp',
+  horaInicioSemana: 8,
+  horaFimSemana: 18,
+  horaInicioSabado: 9,
+  horaFimSabado: 14,
   fotoFachada: 'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=1600&q=80',
   fotoShowroom: 'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=1200&q=80',
-  webhookMarketplaces: ''
+  webhookMarketplaces: '',
+  googleAdsId: '',
+  pixelMetaId: ''
 };
 
 // Catálogo dos Carros Mais Vendidos do Brasil (Foco Real de Multimarcas)

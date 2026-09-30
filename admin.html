@@ -623,6 +623,44 @@
             <p class="text-[10px] text-slate-400 mt-1">Essa imagem aparecerá no fundo do banner principal (Hero) e na área de localização do site.</p>
           </div>
 
+          <!-- Horários da Ficha do Google Meu Negócio -->
+          <div class="border-t border-slate-200 pt-3">
+            <label class="block text-xs font-bold text-slate-800 uppercase mb-1 flex items-center justify-between">
+              <span>⏰ Horários da Ficha do Google (Sincronização WhatsApp)</span>
+              <span class="text-[10px] text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded font-bold">Online Automático</span>
+            </label>
+            <p class="text-[11px] text-slate-500 mb-2">O botão de WhatsApp do site exibirá <strong>"Estamos online agora"</strong> exatamente durante estes horários.</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-600 mb-1">Segunda a Sexta</label>
+                <input type="text" id="config-horario-semana" placeholder="Segunda a Sexta: 08:00 às 18:00" class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              </div>
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-600 mb-1">Sábados</label>
+                <input type="text" id="config-horario-sabado" placeholder="Sábados: 09:00 às 14:00" class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              </div>
+            </div>
+          </div>
+
+          <!-- Tags de Remarketing (Google Ads & Meta Pixel) -->
+          <div class="border-t border-slate-200 pt-3">
+            <label class="block text-xs font-bold text-slate-800 uppercase mb-1 flex items-center justify-between">
+              <span>🎯 Remarketing & Tráfego Pago (Google Ads & Meta)</span>
+              <span class="text-[10px] text-blue-600 bg-blue-50 px-2 py-0.5 rounded font-bold">LGPD Compliance</span>
+            </label>
+            <p class="text-[11px] text-slate-500 mb-2">Insira os IDs das tags para gravar dados de navegação e gerar audiências de remarketing.</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-600 mb-1">ID Google Ads (AW-XXXXXX)</label>
+                <input type="text" id="config-google-ads" placeholder="Ex: AW-123456789" class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              </div>
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-600 mb-1">ID Pixel Meta / Facebook</label>
+                <input type="text" id="config-pixel-meta" placeholder="Ex: 987654321012345" class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              </div>
+            </div>
+          </div>
+
           <div class="pt-3 border-t border-slate-200 flex items-center justify-end gap-2">
             <button type="button" id="btn-cancelar-loja" class="bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 text-xs font-semibold px-4 py-2 rounded-lg transition">Cancelar</button>
             <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs px-5 py-2 rounded-lg transition shadow-md">Salvar Identidade da Loja</button>

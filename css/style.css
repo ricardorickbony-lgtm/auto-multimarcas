@@ -328,4 +328,59 @@ body {
   transform: translateY(-3px) scale(1.08);
 }
 
+/* ==========================================================================
+   Banner de Consentimento de Cookies & Remarketing LGPD
+   ========================================================================== */
+.cookie-banner-container {
+  position: fixed;
+  bottom: 24px;
+  left: 20px;
+  right: 20px;
+  max-width: 720px;
+  margin: 0 auto;
+  background: rgba(15, 23, 42, 0.96);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  padding: 20px 24px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+  transform: translateY(140%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.cookie-banner-container.show {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@media (max-width: 640px) {
+  .cookie-banner-container {
+    bottom: 12px;
+    left: 12px;
+    right: 12px;
+    padding: 16px;
+    border-radius: 16px;
+  }
+}
+
+/* Tooltip e badge da Ficha do Google no WhatsApp */
+.wa-google-badge {
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  opacity: 0.85;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+
 

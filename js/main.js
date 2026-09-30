@@ -9,21 +9,18 @@ let fotoIndexAtual = 0;
 document.addEventListener('DOMContentLoaded', () => {
   const configLoja = ConfigLojaDB.obterConfig();
 
-  // 1. Inicializa Atendimento WhatsApp Inteligente
-  initWhatsAppStatus({
-    numero: configLoja.whatsapp || '5511999999999',
-    diasSemana: [1, 2, 3, 4, 5],
-    horaInicio: 8.5, // 08:30
-    horaFim: 18.5,   // 18:30
-    sabadoAbre: true,
-    sabadoHoraFim: 14 // 14:00
-  });
+  // 1. Inicializa Atendimento WhatsApp Inteligente Sincronizado com a Ficha do Google
+  initWhatsAppStatus(configLoja);
+  setInterval(() => initWhatsAppStatus(configLoja), 60000);
 
   // 2. Aplica Identidade da Loja
   aplicarIdentidadeLoja(configLoja);
 
   // 3. Inicializa Vitrine de Veículos
   initVitrine();
+
+  // 4. Inicializa Gestão de Cookies LGPD e Remarketing
+  initCookiesERemarketing();
 });
 
 let filtroAtual = {
@@ -665,48 +662,210 @@ function abrirModalCarro(id) {
 }
 
 /**
- * Gerenciador de Atendimento WhatsApp em Tempo Real
+ * Gerenciador de Atendimento WhatsApp em Tempo Real (Sincronizado com a Ficha do Google Meu Negócio)
  */
 function initWhatsAppStatus(config) {
-  const {
-    numero = '5511999999999',
-    diasSemana = [1, 2, 3, 4, 5],
-    horaInicio = 8.5,
-    horaFim = 18.5,
-    sabadoAbre = true,
-    sabadoHoraFim = 14
-  } = config;
+  const cfg = config || ConfigLojaDB.obterConfig();
+  const numero = (cfg.whatsapp || '5511999999999').replace(/\D/g, '');
+
+  // Horários oficiais sincronizados com a Ficha do Google
+  const horaInicioSemana = typeof cfg.horaInicioSemana === 'number' ? cfg.horaInicioSemana : 8; // 08:00
+  const horaFimSemana = typeof cfg.horaFimSemana === 'number' ? cfg.horaFimSemana : 18;       // 18:00
+  const horaInicioSabado = typeof cfg.horaInicioSabado === 'number' ? cfg.horaInicioSabado : 9; // 09:00
+  const horaFimSabado = typeof cfg.horaFimSabado === 'number' ? cfg.horaFimSabado : 14;       // 14:00
 
   const agora = new Date();
-  const diaSemana = agora.getDay();
-  const hora = agora.getHours();
-  const minutos = agora.getMinutes();
-  const horaDecimal = hora + (minutos / 60);
+  const diaSemana = agora.getDay(); // 0 = Domingo, 1 = Segunda ... 6 = Sábado
+  const horaDecimal = agora.getHours() + (agora.getMinutes() / 60);
 
   let isOnline = false;
+  let statusTexto = '';
+  let statusBadgeGoogle = '';
 
-  if (diasSemana.includes(diaSemana) && horaDecimal >= horaInicio && horaDecimal < horaFim) {
-    isOnline = true;
-  } else if (sabadoAbre && diaSemana === 6 && horaDecimal >= horaInicio && horaDecimal < sabadoHoraFim) {
-    isOnline = true;
+  // Segunda a Sexta-feira (dias 1 a 5): das 08h às 18h
+  if (diaSemana >= 1 && diaSemana <= 5) {
+    if (horaDecimal >= horaInicioSemana && horaDecimal < horaFimSemana) {
+      isOnline = true;
+      statusTexto = 'Estamos online agora';
+      statusBadgeGoogle = 'Google: Seg a Sex das 08h às 18h';
+    } else {
+      isOnline = false;
+      statusTexto = 'Fora do Expediente';
+      statusBadgeGoogle = 'Plantão WhatsApp • Seg-Sex 08h-18h';
+    }
+  } 
+  // Sábado (dia 6): das 09h às 14h
+  else if (diaSemana === 6) {
+    if (horaDecimal >= horaInicioSabado && horaDecimal < horaFimSabado) {
+      isOnline = true;
+      statusTexto = 'Estamos online agora';
+      statusBadgeGoogle = 'Google: Sábados das 09h às 14h';
+    } else {
+      isOnline = false;
+      statusTexto = 'Fora do Expediente';
+      statusBadgeGoogle = 'Plantão WhatsApp • Sáb 09h-14h';
+    }
+  } 
+  // Domingo e Feriados (dia 0)
+  else {
+    isOnline = false;
+    statusTexto = 'Plantão WhatsApp';
+    statusBadgeGoogle = 'Ficha do Google: Retorno Segunda às 08h';
   }
 
   const linkEl = document.getElementById('wa-link');
   const dotEl = document.getElementById('wa-status-dot');
   const textEl = document.getElementById('wa-status-text');
+  const titleEl = document.querySelector('.wa-title');
+  const badgeGoogleEl = document.getElementById('wa-google-horario');
 
   if (!linkEl || !dotEl || !textEl) return;
 
   if (isOnline) {
+    linkEl.classList.remove('offline-mode');
     dotEl.className = 'wa-status-dot online';
-    textEl.textContent = 'Online Agora';
-    const msg = encodeURIComponent('Olá! Vim pelo site da loja e gostaria de tirar uma dúvida sobre um veículo.');
+    textEl.textContent = statusTexto; // Exatamente "Estamos online agora"
+    if (titleEl) titleEl.textContent = 'Falar no WhatsApp';
+    if (badgeGoogleEl) badgeGoogleEl.textContent = statusBadgeGoogle;
+    
+    linkEl.title = `Ficha do Google: Seg-Sex 08h às 18h | Sáb 09h às 14h (${statusTexto})`;
+    const msg = encodeURIComponent(`Olá! Vim pelo site da ${cfg.nome || 'loja'} e gostaria de falar com um consultor.`);
     linkEl.href = `https://wa.me/${numero}?text=${msg}`;
   } else {
     linkEl.classList.add('offline-mode');
     dotEl.className = 'wa-status-dot offline';
-    textEl.textContent = 'Fora do Expediente';
-    const msg = encodeURIComponent('Olá! Vi o site fora do horário comercial e gostaria de deixar uma mensagem.');
+    textEl.textContent = statusTexto;
+    if (titleEl) titleEl.textContent = 'Plantão WhatsApp';
+    if (badgeGoogleEl) badgeGoogleEl.textContent = statusBadgeGoogle;
+
+    linkEl.title = `Ficha do Google: Seg-Sex 08h-18h | Sáb 09h-14h (Deixe sua mensagem para o próximo atendimento)`;
+    const msg = encodeURIComponent(`Olá! Vi os veículos no site fora do horário comercial da loja e gostaria de receber mais informações.`);
     linkEl.href = `https://wa.me/${numero}?text=${msg}`;
+  }
+}
+
+/**
+ * Gestão de Cookies, Consentimento LGPD e Remarketing (Google Ads & Meta Pixel)
+ */
+function initCookiesERemarketing() {
+  const STORAGE_COOKIE_KEY = 'autoprime_cookie_consent_v1';
+  const banner = document.getElementById('cookie-consent-banner');
+  const btnAceitarTodos = document.getElementById('btn-cookie-aceitar-todos');
+  const btnEssenciais = document.getElementById('btn-cookie-essenciais');
+  const btnAbrirPolitica = document.querySelectorAll('[data-abrir-politica]');
+  const modalPolitica = document.getElementById('modal-politica-privacidade');
+  const btnFecharPolitica = document.getElementById('btn-fechar-politica');
+  const btnFecharPoliticaRodape = document.getElementById('btn-fechar-politica-rodape');
+
+  // Inicializa o dataLayer para remarketing e mensuração
+  window.dataLayer = window.dataLayer || [];
+
+  // Função global de disparo de conversão para o Ricardo usar no Google Ads / Meta Ads
+  window.registrarConversao = function(tipo, dados = {}) {
+    try {
+      const eventoData = {
+        event: tipo,
+        timestamp: new Date().toISOString(),
+        ...dados
+      };
+      window.dataLayer.push(eventoData);
+
+      // Salva no histórico de sessão para remarketing inteligente
+      const historico = JSON.parse(sessionStorage.getItem('autoprime_eventos_sessao') || '[]');
+      historico.push({ tipo, timestamp: Date.now(), dados });
+      sessionStorage.setItem('autoprime_eventos_sessao', JSON.stringify(historico.slice(-20)));
+
+      // Se existir o pixel do Facebook/Meta
+      if (typeof window.fbq === 'function') {
+        window.fbq('trackCustom', tipo, dados);
+      }
+      // Se existir o Google Tag / Google Ads
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', tipo, dados);
+      }
+
+      console.log('🎯 [Remarketing / Conversão Registrada]:', tipo, dados);
+    } catch (e) {
+      console.warn('Erro ao registrar conversão:', e);
+    }
+  };
+
+  // Verifica consentimento prévio
+  const consentimentoSalvo = localStorage.getItem(STORAGE_COOKIE_KEY);
+
+  if (!consentimentoSalvo && banner) {
+    // Exibe após 1 segundo de forma elegante
+    setTimeout(() => {
+      banner.classList.add('show');
+    }, 1000);
+  } else if (consentimentoSalvo) {
+    try {
+      const prefs = JSON.parse(consentimentoSalvo);
+      if (prefs.marketing) {
+        window.registrarConversao('consentimento_ativo', { modo: 'remarketing_permitido' });
+      }
+    } catch (e) {}
+  }
+
+  // Ações de Aceite
+  if (btnAceitarTodos) {
+    btnAceitarTodos.addEventListener('click', () => {
+      const consentimento = {
+        aceito: true,
+        essenciais: true,
+        marketing: true,
+        analiticos: true,
+        data: new Date().toISOString()
+      };
+      localStorage.setItem(STORAGE_COOKIE_KEY, JSON.stringify(consentimento));
+      if (banner) banner.classList.remove('show');
+      window.registrarConversao('cookie_consent_aceito', { tipo: 'todos_cookies_remarketing' });
+    });
+  }
+
+  if (btnEssenciais) {
+    btnEssenciais.addEventListener('click', () => {
+      const consentimento = {
+        aceito: true,
+        essenciais: true,
+        marketing: false,
+        analiticos: false,
+        data: new Date().toISOString()
+      };
+      localStorage.setItem(STORAGE_COOKIE_KEY, JSON.stringify(consentimento));
+      if (banner) banner.classList.remove('show');
+      window.registrarConversao('cookie_consent_aceito', { tipo: 'apenas_essenciais' });
+    });
+  }
+
+  // Abertura e Fechamento do Modal de Política de Privacidade
+  btnAbrirPolitica.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (modalPolitica) modalPolitica.classList.remove('hidden');
+    });
+  });
+
+  const fecharModal = () => {
+    if (modalPolitica) modalPolitica.classList.add('hidden');
+  };
+
+  if (btnFecharPolitica) btnFecharPolitica.addEventListener('click', fecharModal);
+  if (btnFecharPoliticaRodape) btnFecharPoliticaRodape.addEventListener('click', fecharModal);
+  if (modalPolitica) {
+    modalPolitica.addEventListener('click', (e) => {
+      if (e.target.classList.contains('modal-backdrop')) fecharModal();
+    });
+  }
+
+  // Monitora cliques em botões de conversão chave (WhatsApp e Simulação)
+  const waBtn = document.getElementById('wa-link');
+  if (waBtn) {
+    waBtn.addEventListener('click', () => {
+      window.registrarConversao('clique_whatsapp_flutuante', {
+        origem: 'widget_flutuante',
+        horario: new Date().toLocaleTimeString('pt-BR')
+      });
+    });
   }
 }

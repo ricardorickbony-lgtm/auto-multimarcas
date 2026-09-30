@@ -651,19 +651,47 @@
       </div>
 
       <div>
-        <h4 class="text-white font-bold text-xs uppercase tracking-wider mb-3">Área Restrita</h4>
-        <p class="text-xs leading-relaxed mb-3">Acesso exclusivo e protegido por senha para gestão da revenda.</p>
-        <a href="admin.html" class="inline-flex items-center gap-1.5 text-slate-400 hover:text-blue-400 text-xs transition">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-          <span>Acesso Seguro do Lojista</span>
-        </a>
+        <h4 class="text-white font-bold text-xs uppercase tracking-wider mb-3">Segurança & Legal</h4>
+        <ul class="space-y-2 text-xs">
+          <li>
+            <button type="button" data-abrir-politica class="text-slate-400 hover:text-white transition">
+              Política de Privacidade (LGPD)
+            </button>
+          </li>
+          <li>
+            <button type="button" data-abrir-politica class="text-slate-400 hover:text-white transition">
+              Cookies & Remarketing
+            </button>
+          </li>
+          <li>
+            <a href="admin.html" class="inline-flex items-center gap-1.5 text-slate-500 hover:text-blue-400 transition pt-1">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+              <span>Acesso do Lojista</span>
+            </a>
+          </li>
+        </ul>
       </div>
 
+    </div>
+
+    <!-- Barra Inferior do Rodapé -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 pt-6 border-t border-slate-800 text-[11px] text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <span>© 2026 AutoPrime Multimarcas • Veículos com Laudo Cautelar Aprovado.</span>
+      <div class="flex items-center gap-4">
+        <button type="button" data-abrir-politica class="hover:text-slate-300 transition">Política de Privacidade</button>
+        <span>•</span>
+        <button type="button" data-abrir-politica class="hover:text-slate-300 transition">Termos de Uso</button>
+        <span>•</span>
+        <span class="text-emerald-500 font-semibold flex items-center gap-1">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          LGPD Compliance
+        </span>
+      </div>
     </div>
   </footer>
 
   <!-- ========================================================================= -->
-  <!-- WIDGET FLUTUANTE DE WHATSAPP INTELIGENTE (Padrão Severino & Ricardo)     -->
+  <!-- WIDGET FLUTUANTE DE WHATSAPP INTELIGENTE (Sincronizado com a Ficha Google) -->
   <!-- ========================================================================= -->
   <div id="whatsapp-widget" class="wa-widget" aria-label="Atendimento via WhatsApp">
     <a id="wa-link" href="#" target="_blank" rel="noopener noreferrer" class="wa-btn">
@@ -675,9 +703,113 @@
       </div>
       <div class="wa-text-box">
         <span class="wa-title">Falar no WhatsApp</span>
-        <span id="wa-status-text" class="wa-status-text">Online Agora</span>
+        <span id="wa-status-text" class="wa-status-text">Estamos online agora</span>
+        <span id="wa-google-horario" class="wa-google-badge">Ficha Google: Seg-Sex 08h-18h | Sáb 09h-14h</span>
       </div>
     </a>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- BANNER DE CONSENTIMENTO DE COOKIES E REMARKETING LGPD                     -->
+  <!-- ========================================================================= -->
+  <div id="cookie-consent-banner" class="cookie-banner-container" role="region" aria-label="Aviso de Cookies e Privacidade">
+    <div class="flex items-start justify-between gap-4">
+      <div class="flex items-start gap-3">
+        <div class="text-2xl flex-shrink-0 mt-0.5">🍪</div>
+        <div class="space-y-1">
+          <h4 class="text-sm font-bold text-white tracking-tight flex items-center gap-2">
+            Privacidade & Cookies Personalizados
+            <span class="text-[10px] bg-blue-500/20 text-blue-400 font-semibold px-2 py-0.5 rounded-full border border-blue-500/30">LGPD</span>
+          </h4>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Utilizamos cookies essenciais e de marketing (Google Ads e Meta) para gravar dados de navegação, exibir ofertas sob medida e medir resultados. Ao continuar navegando, você concorda com a nossa 
+            <button type="button" data-abrir-politica class="text-blue-400 hover:text-blue-300 underline font-semibold focus:outline-none">Política de Privacidade</button>.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="flex flex-col sm:flex-row items-center justify-end gap-2.5 pt-1 border-t border-slate-700/60">
+      <button type="button" data-abrir-politica class="text-xs text-slate-400 hover:text-white px-3 py-2 transition font-medium mr-auto">
+        Ver Detalhes da Política
+      </button>
+      <button type="button" id="btn-cookie-essenciais" class="w-full sm:w-auto bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold px-4 py-2.5 rounded-xl border border-slate-700 transition">
+        Apenas Essenciais
+      </button>
+      <button type="button" id="btn-cookie-aceitar-todos" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-5 py-2.5 rounded-xl transition shadow-lg shadow-blue-600/30">
+        ✓ Aceitar Todos os Cookies
+      </button>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL DE POLÍTICA DE PRIVACIDADE E PROTEÇÃO DE DADOS (LGPD)               -->
+  <!-- ========================================================================= -->
+  <div id="modal-politica-privacidade" class="fixed inset-0 z-50 hidden overflow-y-auto" role="dialog" aria-modal="true">
+    <div class="modal-backdrop fixed inset-0 transition-opacity"></div>
+    <div class="min-h-screen px-4 text-center flex items-center justify-center py-8">
+      <div class="relative bg-white rounded-3xl max-w-2xl w-full mx-auto text-left shadow-2xl overflow-hidden z-10 transition-all border border-slate-200">
+        
+        <div class="bg-slate-900 text-white px-6 py-5 flex items-center justify-between border-b border-slate-800">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center text-lg font-bold border border-blue-500/30">
+              🛡️
+            </div>
+            <div>
+              <h3 class="text-base sm:text-lg font-black tracking-tight">Política de Privacidade & Proteção de Dados</h3>
+              <p class="text-xs text-slate-400">Conformidade oficial com a Lei Geral de Proteção de Dados (LGPD - Lei nº 13.709/2018)</p>
+            </div>
+          </div>
+          <button type="button" id="btn-fechar-politica" class="text-slate-400 hover:text-white text-xl p-1 transition" title="Fechar">✕</button>
+        </div>
+
+        <div class="p-6 sm:p-8 space-y-4 max-h-[70vh] overflow-y-auto text-xs text-slate-600 leading-relaxed">
+          <div>
+            <h4 class="font-bold text-sm text-slate-900 mb-1">1. Controlador dos Dados e Compromisso</h4>
+            <p>A presente Política de Privacidade regula o tratamento dos dados pessoais coletados neste site oficial da revenda. Temos o compromisso irrevogável de garantir a segurança, transparência e privacidade das suas informações.</p>
+          </div>
+
+          <div>
+            <h4 class="font-bold text-sm text-slate-900 mb-1">2. Dados Coletados e Finalidade</h4>
+            <p>Coletamos informações fornecidas voluntariamente pelo visitante através do formulário de <strong>Avaliação de Veículo Usado na Troca</strong> e pelo botão de <strong>Atendimento via WhatsApp</strong> (como nome, telefone e dados do veículo).</p>
+            <p class="mt-1">Esses dados têm a finalidade exclusiva de:</p>
+            <ul class="list-disc list-inside mt-1 space-y-0.5 text-slate-700">
+              <li>Retorno de propostas comerciais de compra e venda de veículos;</li>
+              <li>Agendamento de test-drive e simulação de condições de financiamento bancário;</li>
+              <li>Atendimento consultivo direto com a equipe de vendas da concessionária.</li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="font-bold text-sm text-slate-900 mb-1">3. Cookies de Navegação e Campanhas de Remarketing</h4>
+            <p>Utilizamos cookies analíticos e de publicidade parceira (como <strong>Google Ads</strong> e <strong>Meta Ads</strong>) para gravar as preferências de navegação dos usuários. Isso nos permite:</p>
+            <ul class="list-disc list-inside mt-1 space-y-0.5 text-slate-700">
+              <li>Exibir anúncios relevantes em redes parceiras sobre os veículos visualizados pelo usuário (Remarketing);</li>
+              <li>Medir o desempenho das campanhas digitais e aperfeiçoar a velocidade da plataforma;</li>
+              <li>Sincronizar o status de atendimento ao vivo integrado aos horários da Ficha do Google Meu Negócio.</li>
+            </ul>
+            <p class="mt-1">O visitante pode, a qualquer momento, limpar os cookies nas configurações do seu navegador ou selecionar "Apenas Essenciais" no aviso de cookies.</p>
+          </div>
+
+          <div>
+            <h4 class="font-bold text-sm text-slate-900 mb-1">4. Direitos do Titular (Art. 18 da LGPD)</h4>
+            <p>Você tem o direito de solicitar a confirmação da existência de tratamento, o acesso aos seus dados, a correção de dados incompletos ou a revogação do consentimento, entrando em contato diretamente pelos nossos canais oficiais de atendimento.</p>
+          </div>
+
+          <div>
+            <h4 class="font-bold text-sm text-slate-900 mb-1">5. Segurança e Certificação HTTPS</h4>
+            <p>Todos os dados trafegam sob protocolo seguro com criptografia SSL/HTTPS de última geração, garantindo que suas consultas não sejam interceptadas por terceiros.</p>
+          </div>
+        </div>
+
+        <div class="p-4 sm:p-5 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-xs">
+          <span class="text-slate-500">Versão atualizada em 2026 • LGPD Compliance</span>
+          <button type="button" id="btn-fechar-politica-rodape" class="bg-slate-900 hover:bg-slate-800 text-white font-bold px-5 py-2.5 rounded-xl transition shadow">
+            Entendido e Ciente
+          </button>
+        </div>
+
+      </div>
+    </div>
   </div>
 
   <!-- Scripts -->
