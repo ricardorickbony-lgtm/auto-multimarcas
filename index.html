@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoPrime Multimarcas | Veículos Selecionados & Procedência Garantida</title>
+  <meta name="description" content="Encontre seu carro seminovo ou zero km na AutoPrime Multimarcas. Veículos 100% periciados com laudo cautelar aprovado e financiamento facilitado.">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Estilos Customizados -->
+  <link rel="stylesheet" href="css/style.css">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0f9ff',
+              600: '#0284c7',
+              700: '#0369a1',
+              900: '#0c4a6e',
+            },
+            dark: {
+              900: '#0b1120',
+              800: '#151f32',
+              700: '#1e293b'
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans antialiased min-h-screen flex flex-col">
+
+  <!-- ========================================================================= -->
+  <!-- BARRA DE DEMONSTRAÇÃO DO SISTEMA INTEGRADO (Para Apresentação a Clientes) -->
+  <!-- ========================================================================= -->
+  <div class="demo-banner text-white px-4 py-2.5 text-xs sm:text-sm">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-2">
+      <div class="flex items-center gap-2 text-center md:text-left">
+        <span class="inline-flex items-center justify-center bg-blue-500 text-white rounded-full w-5 h-5 font-bold text-xs">✓</span>
+        <span><strong>Sistema de Estoque Integrado:</strong> Adicione, edite ou marque carros como vendidos no Painel e veja refletir aqui na hora!</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <a href="admin.html" class="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold px-3 py-1.5 rounded-lg shadow-sm transition text-xs">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+          Abrir Painel do Lojista
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- CABEÇALHO / HEADER PRINCIPAL                                              -->
+  <!-- ========================================================================= -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        
+        <!-- Logo -->
+        <a href="index.html" class="flex items-center gap-3">
+          <div class="w-11 h-11 bg-slate-900 rounded-xl flex items-center justify-center text-white shadow-md">
+            <svg class="w-6 h-6 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.85 7h10.29l1.04 3H5.81l1.04-3zM19 17H5v-4.66l.12-.34h13.77l.11.34V17z"/>
+              <circle cx="7.5" cy="14.5" r="1.5"/>
+              <circle cx="16.5" cy="14.5" r="1.5"/>
+            </svg>
+          </div>
+          <div>
+            <span class="text-xl sm:text-2xl font-black tracking-tight text-slate-900 flex items-center gap-1">
+              AUTOPRIME <span class="text-xs bg-blue-600 text-white font-bold px-1.5 py-0.5 rounded">PRO</span>
+            </span>
+            <span class="block text-xs font-semibold text-slate-500 tracking-wider uppercase">Veículos Multimarcas</span>
+          </div>
+        </a>
+
+        <!-- Menu Desktop -->
+        <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
+          <a href="#estoque" class="hover:text-blue-600 transition">Estoque</a>
+          <a href="#diferenciais" class="hover:text-blue-600 transition">Por que Nós?</a>
+          <a href="#depoimentos" class="hover:text-blue-600 transition">Depoimentos</a>
+          <a href="#contato" class="hover:text-blue-600 transition">Localização</a>
+        </nav>
+
+        <!-- CTA Cabeçalho -->
+        <div class="flex items-center gap-3">
+          <a href="admin.html" class="hidden sm:inline-flex items-center gap-2 border border-slate-300 hover:border-slate-400 bg-white text-slate-700 font-medium px-3.5 py-2 rounded-lg text-sm transition">
+            <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+            Painel Lojista
+          </a>
+          <a href="#estoque" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2.5 rounded-lg text-sm transition shadow-sm flex items-center gap-2">
+            <span>Ver Estoque</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- HERO SECTION: IMPACTO VISUAL + BUSCA RÁPIDA                               -->
+  <!-- ========================================================================= -->
+  <section class="relative bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white py-16 sm:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
+    <!-- Padrão sutil de fundo -->
+    <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] [background-size:16px_16px]"></div>
+
+    <div class="relative max-w-5xl mx-auto text-center space-y-6">
+      
+      <div class="inline-flex items-center gap-2 bg-blue-500/20 border border-blue-400/30 text-blue-300 text-xs sm:text-sm font-semibold px-4 py-1.5 rounded-full">
+        <span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
+        Mais de 10 anos de tradição em veículos premium e seminovos
+      </div>
+
+      <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight">
+        Seu próximo carro com <br class="hidden sm:inline">
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">procedência e transparência total.</span>
+      </h1>
+
+      <p class="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto font-normal">
+        Estoque 100% periciado com laudo cautelar aprovado, garantia estendida e a melhor avaliação do seu seminovo na troca.
+      </p>
+
+      <!-- Painel de Busca Rápida -->
+      <div class="bg-white/10 backdrop-blur-md border border-white/20 p-4 sm:p-6 rounded-2xl shadow-2xl max-w-4xl mx-auto mt-8 text-left">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          
+          <!-- Busca por texto -->
+          <div class="lg:col-span-1">
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Buscar Modelo</label>
+            <input type="text" id="filtro-termo" placeholder="Ex: Compass, BMW, Corolla..." class="w-full bg-white text-slate-800 text-sm rounded-lg px-3 py-2.5 border-0 focus:ring-2 focus:ring-blue-500 placeholder-slate-400">
+          </div>
+
+          <!-- Filtro Marca -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Marca</label>
+            <select id="filtro-marca" class="w-full bg-white text-slate-800 text-sm rounded-lg px-3 py-2.5 border-0 focus:ring-2 focus:ring-blue-500">
+              <option value="">Todas as Marcas</option>
+            </select>
+          </div>
+
+          <!-- Filtro Categoria / Carroceria -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Carroceria</label>
+            <select id="filtro-carroceria" class="w-full bg-white text-slate-800 text-sm rounded-lg px-3 py-2.5 border-0 focus:ring-2 focus:ring-blue-500">
+              <option value="">Todas as Categorias</option>
+              <option value="SUV">SUV</option>
+              <option value="Sedan">Sedan</option>
+              <option value="Picape">Picape</option>
+              <option value="Hatch">Hatch</option>
+            </select>
+          </div>
+
+          <!-- Botão de Ação -->
+          <div class="flex items-end">
+            <button id="btn-aplicar-busca" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 px-4 rounded-lg transition flex items-center justify-center gap-2 text-sm shadow-md">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+              Filtrar Veículos
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- VITRINE DE ESTOQUE INTEGRADO                                              -->
+  <!-- ========================================================================= -->
+  <section id="estoque" class="py-14 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex-1 w-full">
+    
+    <!-- Cabeçalho do Estoque com Contadores e Filtros Rápidos -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8 pb-4 border-b border-slate-200">
+      <div>
+        <div class="flex items-center gap-2 mb-1">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+          <span class="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md">Estoque em Tempo Real</span>
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900">Veículos em Destaque</h2>
+        <p id="estoque-contador" class="text-sm text-slate-500 mt-1">Carregando estoque...</p>
+      </div>
+
+      <!-- Filtros Rápidos de Status -->
+      <div class="flex flex-wrap items-center gap-2">
+        <button data-status-filter="todos" class="status-filter-btn active bg-slate-900 text-white px-3.5 py-1.5 rounded-lg text-xs font-semibold transition">
+          Todos os Veículos
+        </button>
+        <button data-status-filter="disponivel" class="status-filter-btn bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition">
+          Apenas Disponíveis
+        </button>
+        <button data-status-filter="vendido" class="status-filter-btn bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition">
+          Vendidos Recentemente
+        </button>
+      </div>
+    </div>
+
+    <!-- Grid de Carros (Renderizado Dinamicamente via JavaScript) -->
+    <div id="grid-carros" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+      <!-- Inserido por js/main.js -->
+    </div>
+
+    <!-- Mensagem de Nenhum Veículo Encontrado -->
+    <div id="sem-resultados" class="hidden text-center py-16 bg-white rounded-2xl border border-slate-200 p-8">
+      <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto text-slate-400 mb-4">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+      </div>
+      <h3 class="text-lg font-bold text-slate-800">Nenhum veículo encontrado com esses filtros</h3>
+      <p class="text-sm text-slate-500 mt-1 max-w-md mx-auto">Tente alterar os filtros de busca ou verifique outros modelos disponíveis em nosso estoque.</p>
+      <button id="btn-limpar-filtros" class="mt-4 inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg text-xs transition">
+        Limpar Filtros e Ver Todos
+      </button>
+    </div>
+
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- DIFERENCIAIS DA LOJA                                                      -->
+  <!-- ========================================================================= -->
+  <section id="diferenciais" class="bg-white py-16 border-y border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center max-w-3xl mx-auto mb-12">
+        <span class="text-blue-600 font-bold text-xs uppercase tracking-widest">Segurança e Procedência</span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">Por que comprar na AutoPrime?</h2>
+        <p class="text-slate-500 text-sm mt-2">Garantimos a máxima tranquilidade para você focar no prazer de dirigir.</p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        
+        <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100 transition-smooth hover:shadow-md">
+          <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center mb-4">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+          </div>
+          <h3 class="font-bold text-slate-900 text-base mb-1">Laudo Cautelar 100%</h3>
+          <p class="text-xs text-slate-600 leading-relaxed">Todos os carros passam por vistoria minuciosa de estrutura, procedência e histórico de leilão.</p>
+        </div>
+
+        <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100 transition-smooth hover:shadow-md">
+          <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center mb-4">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          </div>
+          <h3 class="font-bold text-slate-900 text-base mb-1">Melhor Avaliação do Usado</h3>
+          <p class="text-xs text-slate-600 leading-relaxed">Pagamento justo e transparente no seu carro de entrada para troca com troco se preferir.</p>
+        </div>
+
+        <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100 transition-smooth hover:shadow-md">
+          <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-xl flex items-center justify-center mb-4">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+          </div>
+          <h3 class="font-bold text-slate-900 text-base mb-1">Financiamento Expresso</h3>
+          <p class="text-xs text-slate-600 leading-relaxed">Parceria com os principais bancos (Santander, BV, Itaú, Bradesco) com taxas especiais.</p>
+        </div>
+
+        <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100 transition-smooth hover:shadow-md">
+          <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center mb-4">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+          </div>
+          <h3 class="font-bold text-slate-900 text-base mb-1">Garantia Completa</h3>
+          <p class="text-xs text-slate-600 leading-relaxed">Veículos entregues revisados com garantia de motor e câmbio documentada em contrato.</p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL DE DETALHES DO VEÍCULO                                              -->
+  <!-- ========================================================================= -->
+  <div id="modal-veiculo" class="fixed inset-0 z-50 hidden overflow-y-auto">
+    <div class="modal-backdrop fixed inset-0 transition-opacity"></div>
+    <div class="min-h-screen px-4 text-center flex items-center justify-center py-8">
+      
+      <div class="relative bg-white rounded-2xl max-w-3xl w-full mx-auto text-left shadow-2xl overflow-hidden z-10 transition-all border border-slate-200">
+        
+        <!-- Botão Fechar -->
+        <button id="btn-fechar-modal" class="absolute top-4 right-4 z-20 bg-slate-900/60 hover:bg-slate-900 text-white rounded-full p-2 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+
+        <!-- Foto Grande do Modal -->
+        <div class="relative h-64 sm:h-80 w-full bg-slate-900">
+          <img id="modal-foto" src="" alt="" class="w-full h-full object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent"></div>
+          
+          <div class="absolute bottom-4 left-6 right-6 flex items-end justify-between">
+            <div>
+              <span id="modal-badge-status" class="badge-status badge-disponivel mb-2">Disponível</span>
+              <h3 id="modal-titulo" class="text-xl sm:text-2xl font-black text-white"></h3>
+              <p id="modal-subtitulo" class="text-xs sm:text-sm text-slate-300 font-medium"></p>
+            </div>
+            <div class="text-right">
+              <span class="text-xs text-slate-300 block font-medium">Preço à Vista</span>
+              <span id="modal-preco" class="text-2xl sm:text-3xl font-extrabold text-white"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Conteúdo do Modal -->
+        <div class="p-6 sm:p-8 space-y-6">
+          
+          <!-- Ficha Técnica Rápida -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-4 rounded-xl border border-slate-200 text-center">
+            <div>
+              <span class="block text-[11px] font-semibold text-slate-500 uppercase">Ano Modelo</span>
+              <span id="modal-ano" class="font-bold text-slate-800 text-sm"></span>
+            </div>
+            <div>
+              <span class="block text-[11px] font-semibold text-slate-500 uppercase">Quilometragem</span>
+              <span id="modal-km" class="font-bold text-slate-800 text-sm"></span>
+            </div>
+            <div>
+              <span class="block text-[11px] font-semibold text-slate-500 uppercase">Câmbio</span>
+              <span id="modal-cambio" class="font-bold text-slate-800 text-sm"></span>
+            </div>
+            <div>
+              <span class="block text-[11px] font-semibold text-slate-500 uppercase">Combustível</span>
+              <span id="modal-combustivel" class="font-bold text-slate-800 text-sm"></span>
+            </div>
+          </div>
+
+          <!-- Descrição do Lojista -->
+          <div>
+            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Sobre este Veículo</h4>
+            <p id="modal-descricao" class="text-sm text-slate-700 leading-relaxed"></p>
+          </div>
+
+          <!-- Opcionais e Equipamentos -->
+          <div>
+            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Itens e Opcionais</h4>
+            <div id="modal-opcionais" class="flex flex-wrap gap-2">
+              <!-- Inserido dinamicamente -->
+            </div>
+          </div>
+
+          <!-- Simulador Rápido de Financiamento -->
+          <div class="bg-blue-50 border border-blue-100 rounded-xl p-4">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-blue-900 mb-1 flex items-center gap-1.5">
+              <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+              Simulação de Parcelas (Estimativa)
+            </h4>
+            <p class="text-xs text-blue-800 mb-3">Com 30% de entrada, financie o saldo em até 48x ou 60x:</p>
+            <div class="grid grid-cols-2 gap-3 text-center">
+              <div class="bg-white p-3 rounded-lg border border-blue-200">
+                <span class="block text-xs text-slate-500 font-medium">Plano 36x</span>
+                <span id="modal-sim-36" class="text-sm font-extrabold text-blue-700"></span>
+              </div>
+              <div class="bg-white p-3 rounded-lg border border-blue-200">
+                <span class="block text-xs text-slate-500 font-medium">Plano 48x</span>
+                <span id="modal-sim-48" class="text-sm font-extrabold text-blue-700"></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Botão de Ação WhatsApp Direto para este Carro -->
+          <div class="pt-2">
+            <a id="modal-btn-whatsapp" href="#" target="_blank" rel="noopener noreferrer" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 px-6 rounded-xl transition flex items-center justify-center gap-2 shadow-lg">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 14.99 3.81 13.47 3.81 11.91C3.81 7.37 7.5 3.67 12.05 3.67Z"/></svg>
+              <span>Falar no WhatsApp sobre este Carro</span>
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- RODAPÉ DA LOJA                                                            -->
+  <!-- ========================================================================= -->
+  <footer id="contato" class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800 text-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+      
+      <div class="space-y-3">
+        <span class="text-xl font-black text-white tracking-tight">AUTOPRIME</span>
+        <p class="text-xs text-slate-400 leading-relaxed">
+          Especialistas na compra, venda e intermediação de veículos multimarcas de procedência.
+        </p>
+        <p class="text-xs text-slate-500">© 2026 AutoPrime Multimarcas. Todos os direitos reservados.</p>
+      </div>
+
+      <div>
+        <h4 class="text-white font-bold text-xs uppercase tracking-wider mb-3">Atendimento</h4>
+        <ul class="space-y-2 text-xs">
+          <li>Segunda a Sexta: 08:30 às 18:30</li>
+          <li>Sábados: 09:00 às 14:00</li>
+          <li>Domingos e Feriados: Plantão WhatsApp</li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="text-white font-bold text-xs uppercase tracking-wider mb-3">Localização</h4>
+        <p class="text-xs leading-relaxed">
+          Av. das Américas, 4500 - Barra da Tijuca<br>
+          Rio de Janeiro - RJ<br>
+          (Estacionamento próprio no local)
+        </p>
+      </div>
+
+      <div>
+        <h4 class="text-white font-bold text-xs uppercase tracking-wider mb-3">Acesso Lojista</h4>
+        <p class="text-xs leading-relaxed mb-3">Gerenciador de estoque integrado para administradores da loja.</p>
+        <a href="admin.html" class="inline-flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 text-blue-400 px-3 py-2 rounded-lg text-xs font-semibold border border-slate-700 transition">
+          Painel de Gestão de Estoque →
+        </a>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- ========================================================================= -->
+  <!-- WIDGET FLUTUANTE DE WHATSAPP INTELIGENTE (Padrão Severino & Ricardo)     -->
+  <!-- ========================================================================= -->
+  <div id="whatsapp-widget" class="wa-widget" aria-label="Atendimento via WhatsApp">
+    <a id="wa-link" href="#" target="_blank" rel="noopener noreferrer" class="wa-btn">
+      <div class="wa-icon-container">
+        <svg class="wa-icon" viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+          <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 14.99 3.81 13.47 3.81 11.91C3.81 7.37 7.5 3.67 12.05 3.67Z"/>
+        </svg>
+        <span id="wa-status-dot" class="wa-status-dot online"></span>
+      </div>
+      <div class="wa-text-box">
+        <span class="wa-title">Falar no WhatsApp</span>
+        <span id="wa-status-text" class="wa-status-text">Online Agora</span>
+      </div>
+    </a>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/db.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
