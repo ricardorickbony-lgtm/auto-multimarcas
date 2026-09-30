@@ -202,3 +202,20 @@ body {
   background: linear-gradient(90deg, #1e293b 0%, #0f172a 100%);
   border-bottom: 2px solid #3b82f6;
 }
+
+/* Animação de Erro de Senha */
+@keyframes shake-auth {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-8px); }
+  40%, 80% { transform: translateX(8px); }
+}
+
+.shake {
+  animation: shake-auth 0.4s ease-in-out;
+}
+
+/* Tela de Autenticação / Bloqueio */
+.auth-overlay {
+  background: radial-gradient(circle at center, #1e293b 0%, #0b1120 100%);
+}
+

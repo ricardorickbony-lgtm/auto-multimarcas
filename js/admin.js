@@ -3,14 +3,24 @@
  * Auto Multimarcas - Padrão Ricardo & Severino
  */
 
+const AUTH_CONFIG = {
+  usuarioPadrao: 'admin',
+  senhaPadrao: 'admin123',
+  sessionKey: 'autoprime_auth_session'
+};
+
 let filtroStatusAdmin = 'todos';
 let termoBuscaAdmin = '';
 
 document.addEventListener('DOMContentLoaded', () => {
-  atualizarDashboard();
+  configurarAutenticacao();
+  if (estaAutenticado()) {
+    atualizarDashboard();
+  }
   configurarEventosAdmin();
   configurarFormulario();
 });
+
 
 function atualizarDashboard() {
   renderizarMetricas();
@@ -375,3 +385,113 @@ function mostrarToast(mensagem) {
     toast.classList.add('translate-y-24', 'opacity-0');
   }, 3500);
 }
+
+/**
+ * Funções de Controle de Acesso e Autenticação
+ */
+function estaAutenticado() {
+  return Boolean(
+    sessionStorage.getItem(AUTH_CONFIG.sessionKey) || 
+    localStorage.getItem(AUTH_CONFIG.sessionKey)
+  );
+}
+
+function configurarAutenticacao() {
+  const telaLogin = document.getElementById('tela-login');
+  const painelConteudo = document.getElementById('painel-conteudo');
+  const formLogin = document.getElementById('form-login');
+  const inputUsuario = document.getElementById('login-usuario');
+  const inputSenha = document.getElementById('login-senha');
+  const checkLembrar = document.getElementById('login-lembrar');
+  const alertaErro = document.getElementById('login-erro');
+  const btnToggleSenha = document.getElementById('btn-toggle-senha');
+  const btnPreencherDemo = document.getElementById('btn-preencher-demo');
+  const btnLogout = document.getElementById('btn-logout');
+  const btnNovoVeiculo = document.getElementById('btn-novo-veiculo');
+
+  const aplicarEstadoAuth = (autenticado) => {
+    if (autenticado) {
+      if (telaLogin) telaLogin.classList.add('hidden');
+      if (painelConteudo) painelConteudo.classList.remove('hidden');
+      if (btnLogout) btnLogout.classList.remove('hidden');
+      if (btnNovoVeiculo) btnNovoVeiculo.classList.remove('hidden');
+    } else {
+      if (telaLogin) telaLogin.classList.remove('hidden');
+      if (painelConteudo) painelConteudo.classList.add('hidden');
+      if (btnLogout) btnLogout.classList.add('hidden');
+      if (btnNovoVeiculo) btnNovoVeiculo.classList.add('hidden');
+    }
+  };
+
+  // Verifica estado inicial
+  aplicarEstadoAuth(estaAutenticado());
+
+  // Submissão do formulário de login
+  if (formLogin) {
+    formLogin.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const usuario = inputUsuario.value.trim().toLowerCase();
+      const senha = inputSenha.value;
+
+      // Validação das credenciais (aceita 'admin' ou email 'lojista@autoprime.com.br')
+      const usuarioValido = usuario === 'admin' || usuario === 'lojista@autoprime.com.br';
+      const senhaValida = senha === AUTH_CONFIG.senhaPadrao;
+
+      if (usuarioValido && senhaValida) {
+        alertaErro.classList.add('hidden');
+        const tokenData = JSON.stringify({ usuario: 'admin', nome: 'Gerente da Loja', logadoEm: Date.now() });
+
+        if (checkLembrar && checkLembrar.checked) {
+          localStorage.setItem(AUTH_CONFIG.sessionKey, tokenData);
+        } else {
+          sessionStorage.setItem(AUTH_CONFIG.sessionKey, tokenData);
+        }
+
+        aplicarEstadoAuth(true);
+        atualizarDashboard();
+        mostrarToast('✓ Acesso autorizado! Bem-vindo ao painel.');
+      } else {
+        alertaErro.classList.remove('hidden');
+        document.getElementById('login-erro-msg').textContent = 'Usuário ou senha incorretos!';
+        
+        // Efeito shake no card de login
+        const card = formLogin.closest('.bg-white');
+        if (card) {
+          card.classList.add('shake');
+          setTimeout(() => card.classList.remove('shake'), 450);
+        }
+      }
+    });
+  }
+
+  // Toggle visualizar senha (olhinho)
+  if (btnToggleSenha && inputSenha) {
+    btnToggleSenha.addEventListener('click', () => {
+      const isPassword = inputSenha.type === 'password';
+      inputSenha.type = isPassword ? 'text' : 'password';
+    });
+  }
+
+  // Preenchimento automático para testes / demo
+  if (btnPreencherDemo && inputUsuario && inputSenha) {
+    btnPreencherDemo.addEventListener('click', () => {
+      inputUsuario.value = 'admin';
+      inputSenha.value = 'admin123';
+      if (alertaErro) alertaErro.classList.add('hidden');
+    });
+  }
+
+  // Botão de Logout
+  if (btnLogout) {
+    btnLogout.addEventListener('click', () => {
+      if (confirm('Deseja realmente sair do painel?')) {
+        sessionStorage.removeItem(AUTH_CONFIG.sessionKey);
+        localStorage.removeItem(AUTH_CONFIG.sessionKey);
+        if (inputSenha) inputSenha.value = '';
+        aplicarEstadoAuth(false);
+        mostrarToast('Você saiu do painel com segurança.');
+      }
+    });
+  }
+}
+
