@@ -152,6 +152,12 @@
             <span class="hidden md:inline">Dados da Loja</span>
           </button>
 
+          <!-- Integrador de Marketplaces (OLX, Mercado Livre, Webmotors) -->
+          <button id="btn-abrir-integracoes" class="inline-flex items-center gap-1.5 bg-gradient-to-r from-purple-700 to-indigo-700 hover:from-purple-600 hover:to-indigo-600 text-white text-xs sm:text-sm font-bold px-3 py-2 rounded-xl transition shadow-md" title="Integrador Automotivo de Estoque para OLX, Webmotors e Mercado Livre">
+            <span>🚀</span>
+            <span class="hidden md:inline">Marketplaces</span>
+          </button>
+
           <!-- Alterar Senha -->
           <button id="btn-abrir-alterar-senha" class="inline-flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs sm:text-sm font-semibold px-3 py-2 rounded-xl transition" title="Alterar Senha de Acesso">
             <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path></svg>
@@ -468,13 +474,41 @@
             <label for="form-destaque" class="text-xs font-bold text-slate-700 cursor-pointer">Destacar este veículo na página inicial do site</label>
           </div>
 
+          <!-- Canais de Publicação Simultânea (Multi-postador / Marketplaces) -->
+          <div class="border-t border-slate-200 pt-3 bg-slate-50 p-3.5 rounded-xl border border-slate-200/80">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-slate-800 uppercase flex items-center gap-1.5">
+                <span>🚀</span> Publicação Simultânea em Marketplaces
+              </span>
+              <span class="text-[10px] text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">Sincronização Ativa</span>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+              <label class="flex items-center gap-2 p-2 bg-white border border-slate-200 rounded-lg cursor-pointer hover:border-blue-500 transition">
+                <input type="checkbox" id="pub-site" checked class="w-4 h-4 text-blue-600 rounded">
+                <span class="font-bold text-slate-800">Site Oficial</span>
+              </label>
+              <label class="flex items-center gap-2 p-2 bg-white border border-slate-200 rounded-lg cursor-pointer hover:border-purple-500 transition">
+                <input type="checkbox" id="pub-olx" checked class="w-4 h-4 text-purple-600 rounded">
+                <span class="font-bold text-purple-700">OLX Pro</span>
+              </label>
+              <label class="flex items-center gap-2 p-2 bg-white border border-slate-200 rounded-lg cursor-pointer hover:border-yellow-500 transition">
+                <input type="checkbox" id="pub-ml" checked class="w-4 h-4 text-yellow-600 rounded">
+                <span class="font-bold text-yellow-700">Mercado Livre</span>
+              </label>
+              <label class="flex items-center gap-2 p-2 bg-white border border-slate-200 rounded-lg cursor-pointer hover:border-red-500 transition">
+                <input type="checkbox" id="pub-webmotors" checked class="w-4 h-4 text-red-600 rounded">
+                <span class="font-bold text-red-700">Webmotors</span>
+              </label>
+            </div>
+          </div>
+
           <!-- Botões de Ação do Form -->
           <div class="pt-4 border-t border-slate-200 flex items-center justify-end gap-3">
             <button type="button" id="btn-cancelar-form" class="bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 font-semibold text-xs px-4 py-2.5 rounded-lg transition">
               Cancelar
             </button>
             <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs px-5 py-2.5 rounded-lg transition shadow-md flex items-center gap-1.5">
-              <span>Salvar e Publicar no Site</span>
+              <span>Salvar e Sincronizar Estoque</span>
             </button>
           </div>
 
@@ -594,6 +628,141 @@
             <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs px-5 py-2 rounded-lg transition shadow-md">Salvar Identidade da Loja</button>
           </div>
         </form>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL DE INTEGRAÇÕES & MARKETPLACES (OLX, MERCADO LIVRE, WEBMOTORS)       -->
+  <!-- ========================================================================= -->
+  <div id="modal-integracoes" class="fixed inset-0 z-50 hidden overflow-y-auto">
+    <div class="modal-backdrop fixed inset-0 transition-opacity"></div>
+    <div class="min-h-screen px-4 text-center flex items-center justify-center py-8">
+      
+      <div class="relative bg-white rounded-3xl max-w-2xl w-full mx-auto text-left shadow-2xl overflow-hidden z-10 transition-all border border-slate-200">
+        
+        <!-- Topo do Modal -->
+        <div class="bg-gradient-to-r from-slate-950 via-slate-900 to-indigo-950 text-white px-6 py-5 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-indigo-500/20 text-indigo-400 border border-indigo-400/30 flex items-center justify-center text-xl shadow-inner">
+              🚀
+            </div>
+            <div>
+              <h3 class="text-base sm:text-lg font-black tracking-tight text-white flex items-center gap-2">
+                Integrador de Estoque Automotivo
+                <span class="text-[10px] bg-emerald-500 text-slate-950 font-black px-2 py-0.5 rounded-full uppercase">Multi-Portais Ativo</span>
+              </h3>
+              <p class="text-xs text-slate-400 mt-0.5">Sincronize seu estoque em 1 clique com os maiores portais de classificados do Brasil.</p>
+            </div>
+          </div>
+          <button id="btn-fechar-modal-integracoes" class="text-slate-400 hover:text-white transition text-lg">✕</button>
+        </div>
+
+        <div class="p-6 sm:p-8 space-y-6">
+          
+          <!-- Badges dos Marketplaces Suportados -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+            
+            <div class="p-3 bg-purple-50 border border-purple-200 rounded-2xl">
+              <span class="block text-sm sm:text-base font-black text-purple-700">OLX Pro</span>
+              <span class="text-[10px] font-semibold text-purple-600 block">Canal Pro XML / API</span>
+              <span class="mt-1 inline-flex items-center gap-1 text-[10px] font-bold text-emerald-600">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Conectado
+              </span>
+            </div>
+
+            <div class="p-3 bg-amber-50 border border-amber-200 rounded-2xl">
+              <span class="block text-sm sm:text-base font-black text-amber-800">Mercado Livre</span>
+              <span class="text-[10px] font-semibold text-amber-700 block">Cat. MLB1743</span>
+              <span class="mt-1 inline-flex items-center gap-1 text-[10px] font-bold text-emerald-600">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Conectado
+              </span>
+            </div>
+
+            <div class="p-3 bg-red-50 border border-red-200 rounded-2xl">
+              <span class="block text-sm sm:text-base font-black text-red-700">Webmotors</span>
+              <span class="text-[10px] font-semibold text-red-600 block">Cockpit Sensedia</span>
+              <span class="mt-1 inline-flex items-center gap-1 text-[10px] font-bold text-emerald-600">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Conectado
+              </span>
+            </div>
+
+            <div class="p-3 bg-blue-50 border border-blue-200 rounded-2xl">
+              <span class="block text-sm sm:text-base font-black text-blue-700">iCarros</span>
+              <span class="text-[10px] font-semibold text-blue-600 block">Feed Padronizado</span>
+              <span class="mt-1 inline-flex items-center gap-1 text-[10px] font-bold text-emerald-600">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Conectado
+              </span>
+            </div>
+
+          </div>
+
+          <!-- Link do Feed XML Automático -->
+          <div class="bg-slate-50 p-4 sm:p-5 rounded-2xl border border-slate-200 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <label class="block text-xs font-bold text-slate-800 uppercase">Link do Feed XML Contínuo (URL para Portais)</label>
+              <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">Atualização em Tempo Real</span>
+            </div>
+            <p class="text-xs text-slate-500">Cole este link dentro do seu painel do OLX Canal Pro, Webmotors Cockpit ou iCarros. Eles leem e atualizam seu estoque sozinhos a cada hora sem retrabalho.</p>
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 pt-1">
+              <input type="text" id="integracao-feed-url" readonly value="https://autoprime.com.br/feed/estoque.xml" class="flex-1 text-xs bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 font-mono text-slate-700 select-all focus:outline-none">
+              <button type="button" id="btn-copiar-feed-url" class="bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition flex items-center justify-center gap-1.5 whitespace-nowrap shadow-sm">
+                <span>📋 Copiar Link</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Ações Rápidas de Download de Lote -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <button type="button" id="btn-baixar-xml" class="p-3.5 bg-white hover:bg-slate-50 border border-slate-300 rounded-2xl text-left flex items-center gap-3 transition group shadow-sm">
+              <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center text-lg font-bold group-hover:scale-105 transition-transform">
+                📄
+              </div>
+              <div>
+                <span class="block text-xs font-bold text-slate-900">Baixar Feed XML (.xml)</span>
+                <span class="text-[11px] text-slate-500">Arquivo padronizado para homologação</span>
+              </div>
+            </button>
+
+            <button type="button" id="btn-baixar-csv" class="p-3.5 bg-white hover:bg-slate-50 border border-slate-300 rounded-2xl text-left flex items-center gap-3 transition group shadow-sm">
+              <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-lg font-bold group-hover:scale-105 transition-transform">
+                📊
+              </div>
+              <div>
+                <span class="block text-xs font-bold text-slate-900">Baixar Planilha CSV em Lote</span>
+                <span class="text-[11px] text-slate-500">Para importação manual ou backup</span>
+              </div>
+            </button>
+          </div>
+
+          <!-- Conexão via Webhook / n8n / API Automatizada -->
+          <div class="border-t border-slate-200 pt-5 space-y-3">
+            <div class="flex items-center justify-between">
+              <div>
+                <h4 class="text-xs font-bold text-slate-900 uppercase">Webhook de Automação Direta (n8n / APIs REST)</h4>
+                <p class="text-[11px] text-slate-500">Dispara automaticamente ao cadastrar, editar ou marcar um carro como vendido.</p>
+              </div>
+              <span class="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded">Automação Inteligente</span>
+            </div>
+
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+              <input type="text" id="integracao-webhook-url" placeholder="https://seu-n8n.com/webhook/estoque-carros" class="flex-1 text-xs border border-slate-300 rounded-xl px-3.5 py-2.5 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              <button type="button" id="btn-salvar-webhook" class="bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition shadow">
+                Salvar Webhook
+              </button>
+              <button type="button" id="btn-testar-webhook" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs px-3.5 py-2.5 rounded-xl transition">
+                Testar Disparo
+              </button>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-slate-200 flex items-center justify-between text-xs text-slate-500">
+            <span>Protocolo de sincronização: <strong>AutoFeed v2.0 REST/XML</strong></span>
+            <button type="button" id="btn-fechar-integracoes-rodape" class="bg-slate-900 hover:bg-slate-800 text-white font-bold px-5 py-2 rounded-xl transition">Concluir</button>
+          </div>
+
+        </div>
 
       </div>
     </div>

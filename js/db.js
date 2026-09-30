@@ -20,7 +20,8 @@ const CONFIG_LOJA_PADRAO = {
   horarioSemana: 'Segunda a Sexta: 08:30 às 18:30',
   horarioSabado: 'Sábados: 09:00 às 14:00',
   fotoFachada: 'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=1600&q=80',
-  fotoShowroom: 'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=1200&q=80'
+  fotoShowroom: 'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=1200&q=80',
+  webhookMarketplaces: ''
 };
 
 // Catálogo dos Carros Mais Vendidos do Brasil (Foco Real de Multimarcas)
@@ -458,6 +459,87 @@ class EstoqueDB {
 
   static formatarKm(km) {
     return new Intl.NumberFormat('pt-BR').format(km) + ' km';
+  }
+
+  /**
+   * Gera Feed XML de Estoque compatível com o padrão de integradores automotivos (OLX, Webmotors, etc.)
+   */
+  static gerarXmlFeed() {
+    const veiculos = this.obterVeiculos().filter(v => v.status === 'disponivel');
+    const config = ConfigLojaDB.obterConfig();
+
+    let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
+    xml += `<estoque_automotivo versao="2.0">\n`;
+    xml += `  <revenda>\n`;
+    xml += `    <nome>${config.nome || 'AutoPrime Multimarcas'}</nome>\n`;
+    xml += `    <telefone>${config.telefone || ''}</telefone>\n`;
+    xml += `    <whatsapp>${config.whatsapp || ''}</whatsapp>\n`;
+    xml += `    <endereco>${config.endereco || ''}</endereco>\n`;
+    xml += `    <cidade>${config.cidade || ''}</cidade>\n`;
+    xml += `    <total_veiculos>${veiculos.length}</total_veiculos>\n`;
+    xml += `    <gerado_em>${new Date().toISOString()}</gerado_em>\n`;
+    xml += `  </revenda>\n`;
+    xml += `  <veiculos>\n`;
+
+    veiculos.forEach(v => {
+      xml += `    <veiculo>\n`;
+      xml += `      <id>${v.id}</id>\n`;
+      xml += `      <marca>${v.marca}</marca>\n`;
+      xml += `      <modelo>${v.modelo}</modelo>\n`;
+      xml += `      <ano_fabricacao>${v.anoFabricacao}</ano_fabricacao>\n`;
+      xml += `      <ano_modelo>${v.anoModelo}</ano_modelo>\n`;
+      xml += `      <preco>${v.preco}</preco>\n`;
+      xml += `      <km>${v.km}</km>\n`;
+      xml += `      <cor>${v.cor}</cor>\n`;
+      xml += `      <cambio>${v.cambio}</cambio>\n`;
+      xml += `      <combustivel>${v.combustivel}</combustivel>\n`;
+      xml += `      <carroceria>${v.carroceria}</carroceria>\n`;
+      xml += `      <placa_final>${v.placaFinal}</placa_final>\n`;
+      xml += `      <status>${v.status}</status>\n`;
+      xml += `      <destaque>${v.destaque ? '1' : '0'}</destaque>\n`;
+      xml += `      <descricao><![CDATA[${v.descricao || ''}]]></descricao>\n`;
+      xml += `      <fotos>\n`;
+      (v.fotos && v.fotos.length > 0 ? v.fotos : [v.foto]).forEach((f, idx) => {
+        if (f) xml += `        <foto ordem="${idx + 1}">${f}</foto>\n`;
+      });
+      xml += `      </fotos>\n`;
+      xml += `      <opcionais>\n`;
+      (v.opcionais || []).forEach(opc => {
+        xml += `        <item>${opc}</item>\n`;
+      });
+      xml += `      </opcionais>\n`;
+      xml += `    </veiculo>\n`;
+    });
+
+    xml += `  </veiculos>\n`;
+    xml += `</estoque_automotivo>`;
+    return xml;
+  }
+
+  /**
+   * Gera Planilha CSV padronizada para importação em lote nos marketplaces
+   */
+  static gerarCsvFeed() {
+    const veiculos = this.obterVeiculos();
+    const headers = ['ID', 'Marca', 'Modelo', 'Ano Fabricacao', 'Ano Modelo', 'Preco Venda', 'KM', 'Cambio', 'Combustivel', 'Cor', 'Carroceria', 'Placa Final', 'Status', 'Foto Capa', 'Descricao'];
+    const rows = veiculos.map(v => [
+      v.id,
+      `"${v.marca}"`,
+      `"${v.modelo}"`,
+      v.anoFabricacao,
+      v.anoModelo,
+      v.preco,
+      v.km,
+      `"${v.cambio}"`,
+      `"${v.combustivel}"`,
+      `"${v.cor}"`,
+      `"${v.carroceria}"`,
+      v.placaFinal,
+      v.status,
+      `"${(v.fotos && v.fotos[0]) || v.foto || ''}"`,
+      `"${(v.descricao || '').replace(/"/g, '""')}"`
+    ]);
+    return [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
   }
 }
 

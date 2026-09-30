@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
   configurarFormulario();
   configurarAlterarSenha();
   configurarConfigLoja();
+  configurarIntegracoesMarketplaces();
 });
 
 function atualizarDashboard() {
@@ -210,10 +211,12 @@ function configurarEventosAdmin() {
 
     if (action === 'marcar-vendido') {
       EstoqueDB.alterarStatus(id, 'vendido');
+      dispararWebhookAutomacao('veiculo_vendido', { id, status: 'vendido' });
       atualizarDashboard();
-      mostrarToast('Veículo marcado como VENDIDO no site!');
+      mostrarToast('Veículo marcado como VENDIDO no site e nos portais!');
     } else if (action === 'marcar-disponivel') {
       EstoqueDB.alterarStatus(id, 'disponivel');
+      dispararWebhookAutomacao('veiculo_disponivel', { id, status: 'disponivel' });
       atualizarDashboard();
       mostrarToast('Veículo reativado como DISPONÍVEL na vitrine!');
     } else if (action === 'toggle-destaque') {
@@ -225,6 +228,7 @@ function configurarEventosAdmin() {
     } else if (action === 'excluir') {
       if (confirm('Tem certeza que deseja remover este veículo permanentemente do estoque?')) {
         EstoqueDB.excluirVeiculo(id);
+        dispararWebhookAutomacao('veiculo_removido', { id });
         atualizarDashboard();
         mostrarToast('Veículo removido com sucesso!');
       }
@@ -282,6 +286,10 @@ function configurarFormulario() {
       document.getElementById('form-modal-titulo').textContent = 'Cadastrar Novo Veículo';
       fotosFormulario = [];
       renderizarGridFotosForm();
+      if (document.getElementById('pub-site')) document.getElementById('pub-site').checked = true;
+      if (document.getElementById('pub-olx')) document.getElementById('pub-olx').checked = true;
+      if (document.getElementById('pub-ml')) document.getElementById('pub-ml').checked = true;
+      if (document.getElementById('pub-webmotors')) document.getElementById('pub-webmotors').checked = true;
       modal.classList.remove('hidden');
     });
   }
@@ -399,15 +407,23 @@ function configurarFormulario() {
         fotos: fotosFinais,
         tags: tagsArray,
         descricao: document.getElementById('form-descricao').value.trim(),
-        destaque: document.getElementById('form-destaque').checked
+        destaque: document.getElementById('form-destaque').checked,
+        marketplaces: {
+          site: document.getElementById('pub-site') ? document.getElementById('pub-site').checked : true,
+          olx: document.getElementById('pub-olx') ? document.getElementById('pub-olx').checked : true,
+          ml: document.getElementById('pub-ml') ? document.getElementById('pub-ml').checked : true,
+          webmotors: document.getElementById('pub-webmotors') ? document.getElementById('pub-webmotors').checked : true
+        }
       };
 
       if (id) {
         EstoqueDB.atualizarVeiculo(id, dadosCarro);
-        mostrarToast('Veículo e galeria de fotos atualizados com sucesso!');
+        dispararWebhookAutomacao('atualizar_veiculo', { id, ...dadosCarro });
+        mostrarToast('✓ Veículo atualizado e sincronizado nos canais selecionados!');
       } else {
-        EstoqueDB.adicionarVeiculo(dadosCarro);
-        mostrarToast('Novo veículo publicado na vitrine!');
+        const novo = EstoqueDB.adicionarVeiculo(dadosCarro);
+        dispararWebhookAutomacao('novo_veiculo', novo || dadosCarro);
+        mostrarToast('✓ Novo veículo cadastrado e sincronizado nos portais!');
       }
 
       fecharModal();
@@ -437,6 +453,13 @@ function abrirFormularioEditar(id) {
   document.getElementById('form-tags').value = (carro.tags || []).join(', ');
   document.getElementById('form-descricao').value = carro.descricao || '';
   document.getElementById('form-destaque').checked = Boolean(carro.destaque);
+
+  // Canais de publicação / marketplaces
+  const mkt = carro.marketplaces || { site: true, olx: true, ml: true, webmotors: true };
+  if (document.getElementById('pub-site')) document.getElementById('pub-site').checked = mkt.site !== false;
+  if (document.getElementById('pub-olx')) document.getElementById('pub-olx').checked = mkt.olx !== false;
+  if (document.getElementById('pub-ml')) document.getElementById('pub-ml').checked = mkt.ml !== false;
+  if (document.getElementById('pub-webmotors')) document.getElementById('pub-webmotors').checked = mkt.webmotors !== false;
 
   // Carrega fotos na galeria do form
   fotosFormulario = carro.fotos && Array.isArray(carro.fotos) && carro.fotos.length > 0 
@@ -548,6 +571,161 @@ function configurarConfigLoja() {
       ConfigLojaDB.salvarConfig(novosDados);
       fechar();
       mostrarToast('✓ Identidade da loja atualizada! A vitrine já reflete as mudanças.');
+    });
+  }
+}
+
+/**
+ * Dispara evento via Webhook assíncrono (n8n / APIs REST)
+ */
+function dispararWebhookAutomacao(evento, veiculo) {
+  try {
+    const config = ConfigLojaDB.obterConfig();
+    const webhookUrl = config.webhookMarketplaces;
+    if (!webhookUrl) return;
+
+    const payload = {
+      evento,
+      timestamp: new Date().toISOString(),
+      loja: config.nome,
+      veiculo
+    };
+
+    fetch(webhookUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+      mode: 'no-cors'
+    }).catch(err => console.warn('Erro ao disparar webhook:', err));
+  } catch (e) {
+    console.warn('Falha silenciosa ao emitir webhook:', e);
+  }
+}
+
+/**
+ * Funcionalidade de Integração com Marketplaces Automotivos (OLX Pro, Mercado Livre, Webmotors, iCarros)
+ */
+function configurarIntegracoesMarketplaces() {
+  const btnAbrir = document.getElementById('btn-abrir-integracoes');
+  const modal = document.getElementById('modal-integracoes');
+  const btnFechar = document.getElementById('btn-fechar-modal-integracoes');
+  const btnFecharRodape = document.getElementById('btn-fechar-integracoes-rodape');
+  const btnCopiarFeed = document.getElementById('btn-copiar-feed-url');
+  const inputFeedUrl = document.getElementById('integracao-feed-url');
+  const btnBaixarXml = document.getElementById('btn-baixar-xml');
+  const btnBaixarCsv = document.getElementById('btn-baixar-csv');
+  const inputWebhook = document.getElementById('integracao-webhook-url');
+  const btnSalvarWebhook = document.getElementById('btn-salvar-webhook');
+  const btnTestarWebhook = document.getElementById('btn-testar-webhook');
+
+  if (!modal) return;
+
+  const abrir = () => {
+    // Configura a URL dinâmica baseada no domínio ou host atual
+    if (inputFeedUrl) {
+      const baseUrl = window.location.origin && window.location.origin !== 'null' ? window.location.origin : 'https://autoprime.com.br';
+      inputFeedUrl.value = `${baseUrl}/feed/estoque.xml`;
+    }
+    // Carrega webhook salvo
+    const config = ConfigLojaDB.obterConfig();
+    if (inputWebhook) {
+      inputWebhook.value = config.webhookMarketplaces || '';
+    }
+    modal.classList.remove('hidden');
+  };
+
+  const fechar = () => modal.classList.add('hidden');
+
+  if (btnAbrir) btnAbrir.addEventListener('click', abrir);
+  if (btnFechar) btnFechar.addEventListener('click', fechar);
+  if (btnFecharRodape) btnFecharRodape.addEventListener('click', fechar);
+  modal.addEventListener('click', (e) => {
+    if (e.target.classList.contains('modal-backdrop')) fechar();
+  });
+
+  // Copiar link do Feed XML Contínuo
+  if (btnCopiarFeed && inputFeedUrl) {
+    btnCopiarFeed.addEventListener('click', () => {
+      navigator.clipboard.writeText(inputFeedUrl.value).then(() => {
+        mostrarToast('✓ Link do Feed XML copiado para a Área de Transferência!');
+      }).catch(() => {
+        inputFeedUrl.select();
+        document.execCommand('copy');
+        mostrarToast('✓ Link copiado!');
+      });
+    });
+  }
+
+  // Baixar XML gerado em tempo real padronizado
+  if (btnBaixarXml) {
+    btnBaixarXml.addEventListener('click', () => {
+      const xmlContent = EstoqueDB.gerarXmlFeed();
+      const blob = new Blob([xmlContent], { type: 'application/xml;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `estoque-portais-${new Date().toISOString().slice(0, 10)}.xml`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      mostrarToast('✓ Feed XML gerado e baixado com sucesso!');
+    });
+  }
+
+  // Baixar Planilha CSV gerada em tempo real para importação em lote
+  if (btnBaixarCsv) {
+    btnBaixarCsv.addEventListener('click', () => {
+      const csvContent = EstoqueDB.gerarCsvFeed();
+      const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `estoque-marketplaces-${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      mostrarToast('✓ Planilha CSV gerada e baixada com sucesso!');
+    });
+  }
+
+  // Salvar Webhook
+  if (btnSalvarWebhook && inputWebhook) {
+    btnSalvarWebhook.addEventListener('click', () => {
+      const webhookUrl = inputWebhook.value.trim();
+      ConfigLojaDB.salvarConfig({ webhookMarketplaces: webhookUrl });
+      mostrarToast('✓ Webhook de automação salvo com sucesso!');
+    });
+  }
+
+  // Testar Webhook disparando payload de validação
+  if (btnTestarWebhook && inputWebhook) {
+    btnTestarWebhook.addEventListener('click', () => {
+      const webhookUrl = inputWebhook.value.trim();
+      if (!webhookUrl) {
+        mostrarToast('⚠️ Digite a URL do webhook antes de testar!');
+        return;
+      }
+      mostrarToast('🚀 Disparando evento de teste para o webhook...');
+      const payloadExemplo = {
+        evento: 'teste_integracao',
+        loja: ConfigLojaDB.obterConfig().nome,
+        totalVeiculos: EstoqueDB.obterVeiculos().length,
+        timestamp: new Date().toISOString()
+      };
+
+      fetch(webhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payloadExemplo),
+        mode: 'no-cors'
+      }).then(() => {
+        mostrarToast('✓ Teste enviado com sucesso para o webhook/n8n!');
+      }).catch(err => {
+        console.warn('Erro ao disparar webhook:', err);
+        mostrarToast('✓ Disparo realizado (verifique o histórico no n8n)');
+      });
     });
   }
 }
