@@ -233,6 +233,73 @@
   </section>
 
   <!-- ========================================================================= -->
+  <!-- PRIVATE SHOWROOM & LOCALIZAÇÃO GOOGLE MAPS (Design Ultra Luxo)            -->
+  <!-- ========================================================================= -->
+  <section id="localizacao" class="bg-[#050811] py-20 border-t border-white/10 relative overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+        <!-- Informações Boutique -->
+        <div class="lg:col-span-5 space-y-6">
+          <div class="inline-flex items-center gap-2 bg-amber-500/10 text-amber-300 text-xs font-bold px-3 py-1 rounded-full border border-amber-500/20">
+            <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+            <span class="tracking-widest uppercase text-[10px]">Private Lounge & Showroom</span>
+          </div>
+          <h2 class="text-2xl sm:text-4xl font-serif-luxury text-white tracking-wide">
+            Visite Nosso Espaço Exclusivo
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-300 font-light leading-relaxed">
+            Ambiente reservado com climatização, lounge privativo e café especial para uma experiência de compra impecável, segura e discreta.
+          </p>
+
+          <div class="space-y-3.5 pt-1 text-xs text-slate-300">
+            <div class="flex items-start gap-3 bg-white/5 p-4 rounded-2xl border border-white/10 backdrop-blur-sm">
+              <div class="w-10 h-10 rounded-xl bg-amber-400 text-slate-950 flex items-center justify-center shrink-0 text-base font-bold shadow-lg shadow-amber-400/20">
+                📍
+              </div>
+              <div>
+                <span class="font-bold block text-white uppercase tracking-wider text-[11px]">Endereço Oficial</span>
+                <span class="mapa-endereco-texto text-slate-300">Av. Dom Pedro I, 1553 - Vila Pires, Santo André - SP</span>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3 bg-white/5 p-4 rounded-2xl border border-white/10 backdrop-blur-sm">
+              <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 text-base font-bold border border-emerald-500/30">
+                ⏰
+              </div>
+              <div>
+                <span class="font-bold block text-white uppercase tracking-wider text-[11px]">Horário Sincronizado Google</span>
+                <span class="mapa-horario-texto text-slate-300">Seg a Sex: 08:00 às 18:00 • Sáb: 08:00 às 15:00</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-2 flex flex-wrap gap-3">
+            <a href="https://maps.google.com" target="_blank" rel="noopener noreferrer" class="btn-rota-maps bg-gradient-to-r from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-slate-950 font-bold text-xs px-6 py-3.5 rounded-xl transition shadow-lg shadow-amber-500/20 flex items-center gap-2">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg>
+              <span>Traçar Rota no Google Maps</span>
+            </a>
+            <a href="https://wa.me/5511999999999" target="_blank" rel="noopener noreferrer" class="btn-maps-wa bg-white/10 hover:bg-white/20 text-white font-semibold text-xs px-6 py-3.5 rounded-xl transition border border-white/20 flex items-center gap-2">
+              <span>Agendar Horário VIP</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Google Maps Iframe -->
+        <div class="lg:col-span-7 h-80 sm:h-96 rounded-2xl overflow-hidden border border-white/10 shadow-2xl relative">
+          <iframe 
+            class="google-maps-iframe w-full h-full"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3653.9499357282057!2d-46.510364!3d-23.677748!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce69e73f9aa713%3A0xd664bb004c5e5108!2sAv.%20Dom%20Pedro%20I%2C%201553!5e0!3m2!1spt-BR!2sbr!4v1710000000000!5m2!1spt-BR!2sbr" 
+            style="border:0;" 
+            allowfullscreen="" 
+            loading="lazy" 
+            referrerpolicy="no-referrer-when-downgrade">
+          </iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
   <!-- MODAL DE DETALHES DO VEÍCULO (Com Galeria Interativa)                     -->
   <!-- ========================================================================= -->
   <div id="modal-veiculo" class="fixed inset-0 z-50 hidden overflow-y-auto">

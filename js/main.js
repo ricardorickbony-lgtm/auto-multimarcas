@@ -49,19 +49,36 @@ function aplicarIdentidadeLoja(config) {
     elShowroom.textContent = config.nome;
   }
 
-  // Endereço no Showroom e Mapa
-  const mapaEnd = document.getElementById('mapa-endereco-texto');
-  if (mapaEnd && config.endereco) {
-    mapaEnd.innerHTML = `${config.endereco}${config.cidade ? ' - ' + config.cidade : ''}`;
-  }
+  // Endereço no Showroom e Mapa (sincroniza todos os templates)
+  const textoEnderecoCompleto = `${config.endereco || 'Av. Dom Pedro I, 1553 - Vila Pires'}${config.cidade ? ' - ' + config.cidade : ', Santo André - SP'}`;
+  document.querySelectorAll('#mapa-endereco-texto, .mapa-endereco-texto').forEach(el => {
+    el.textContent = textoEnderecoCompleto;
+  });
+
+  // Horários exibidos no Mapa
+  const textoHorarioCompleto = `${config.horarioSemana || 'Seg a Sex: 08:00 às 18:00'} • ${config.horarioSabado || 'Sáb: 08:00 às 15:00'}`;
+  document.querySelectorAll('#mapa-horario-texto, .mapa-horario-texto').forEach(el => {
+    el.textContent = textoHorarioCompleto;
+  });
 
   // Link Rota Maps
-  const queryMaps = encodeURIComponent(`${config.endereco || ''} ${config.cidade || ''}`);
+  const queryMaps = encodeURIComponent(`${config.endereco || 'Av. Dom Pedro I, 1553'} ${config.cidade || 'Santo André - SP'}`);
   const urlMaps = `https://www.google.com/maps/search/?api=1&query=${queryMaps}`;
-  const btnRota = document.getElementById('btn-rota-maps');
-  const pillMaps = document.getElementById('pill-maps-link');
-  if (btnRota && (config.endereco || config.cidade)) btnRota.href = urlMaps;
-  if (pillMaps && (config.endereco || config.cidade)) pillMaps.href = urlMaps;
+  document.querySelectorAll('#btn-rota-maps, .btn-rota-maps, #pill-maps-link').forEach(el => {
+    el.href = urlMaps;
+  });
+
+  // Iframe Dinâmico do Google Maps (atualiza em todos os templates)
+  document.querySelectorAll('.google-maps-iframe, #google-maps-iframe').forEach(iframe => {
+    iframe.src = `https://maps.google.com/maps?q=${queryMaps}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
+  });
+
+  // Botões de Agendamento/Contato via WhatsApp no Mapa
+  const waNumeroClean = (config.whatsapp || '5511999999999').replace(/\D/g, '');
+  const msgVisita = encodeURIComponent(`Olá! Vim pelo site da ${config.nome || 'loja'} e gostaria de agendar uma visita ao showroom.`);
+  document.querySelectorAll('#btn-maps-wa, .btn-maps-wa').forEach(el => {
+    el.href = `https://wa.me/${waNumeroClean}?text=${msgVisita}`;
+  });
 
   // Contatos rápidos (Pills)
   const pillTelLink = document.getElementById('pill-tel-link');
@@ -446,8 +463,9 @@ function criarCardCarro(carro) {
 
           <!-- Ações Rápidas -->
           <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-100">
-            <button data-ver-detalhes="${carro.id}" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold py-2 rounded-lg text-center transition">
-              Ver Detalhes
+            <button type="button" data-ver-detalhes="${carro.id}" class="w-full bg-slate-100 hover:bg-blue-600 hover:text-white text-slate-800 text-xs font-bold py-2 rounded-lg text-center transition flex items-center justify-center gap-1.5 shadow-sm" title="Ver Fotos do Veículo">
+              <svg class="w-3.5 h-3.5 text-blue-500 group-hover:text-white transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+              <span>Ver Fotos</span>
             </button>
             ${!isVendido ? `
               <a href="${linkWhatsApp}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation();" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold py-2 rounded-lg text-center transition flex items-center justify-center gap-1 shadow-sm">
@@ -746,15 +764,18 @@ function configurarModal() {
   const btnFechar = document.getElementById('btn-fechar-modal');
   const btnPrev = document.getElementById('modal-btn-prev');
   const btnNext = document.getElementById('modal-btn-next');
-  if (!modal || !btnFechar) return;
 
-  btnFechar.addEventListener('click', () => modal.classList.add('hidden'));
+  if (btnFechar && modal) {
+    btnFechar.addEventListener('click', () => modal.classList.add('hidden'));
+  }
 
-  modal.addEventListener('click', (e) => {
-    if (e.target.classList.contains('modal-backdrop')) {
-      modal.classList.add('hidden');
-    }
-  });
+  if (modal) {
+    modal.addEventListener('click', (e) => {
+      if (e.target.classList.contains('modal-backdrop')) {
+        modal.classList.add('hidden');
+      }
+    });
+  }
 
   document.addEventListener('keydown', (e) => {
     if (modal.classList.contains('hidden')) return;

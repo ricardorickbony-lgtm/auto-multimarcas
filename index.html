@@ -576,7 +576,7 @@
   <!-- ========================================================================= -->
   <!-- SHOWROOM & LOCALIZAÇÃO COM GOOGLE MAPS INTERATIVO                         -->
   <!-- ========================================================================= -->
-  <section class="bg-slate-50 py-16 border-t border-slate-200">
+  <section id="localizacao" class="bg-slate-50 py-16 border-t border-slate-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       
       <div class="text-center max-w-2xl mx-auto mb-10">
@@ -609,18 +609,25 @@
           <div class="space-y-2 text-xs text-slate-600 border-t border-slate-100 pt-4">
             <div class="flex items-center gap-2">
               <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-              <span><strong>Segunda a Sexta:</strong> 08:30 às 18:30</span>
+              <span><strong>Segunda a Sexta:</strong> 08:00 às 18:00</span>
             </div>
             <div class="flex items-center gap-2">
               <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-              <span><strong>Sábados:</strong> 09:00 às 14:00</span>
+              <span><strong>Sábados:</strong> 08:00 às 15:00</span>
+            </div>
+            <div class="text-[11px] text-slate-400 pt-1 flex items-center gap-1.5">
+              <span>⏰ Sincronizado com a Ficha Oficial do Google</span>
             </div>
           </div>
 
-          <div class="pt-2">
-            <a href="https://maps.google.com" id="btn-rota-maps" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs px-5 py-3 rounded-xl transition shadow">
+          <div class="pt-2 flex flex-wrap gap-2">
+            <a href="https://maps.google.com" id="btn-rota-maps" target="_blank" rel="noopener noreferrer" class="btn-rota-maps inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs px-5 py-3 rounded-xl transition shadow">
               <svg class="w-4 h-4 text-red-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg>
-              <span>Abrir Rota no Waze / Google Maps</span>
+              <span>Abrir Rota no Google Maps</span>
+            </a>
+            <a href="https://wa.me/5511999999999" id="btn-maps-wa" target="_blank" rel="noopener noreferrer" class="btn-maps-wa inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-4 py-3 rounded-xl transition shadow">
+              <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 14.99 3.81 13.47 3.81 11.91C3.81 7.37 7.5 3.67 12.05 3.67Z"/></svg>
+              <span>Agendar Visita</span>
             </a>
           </div>
         </div>
@@ -628,9 +635,9 @@
         <!-- Google Maps Iframe -->
         <div class="lg:col-span-7 h-72 sm:h-80 rounded-2xl overflow-hidden border border-slate-200 shadow-inner">
           <iframe 
+            id="google-maps-iframe"
+            class="google-maps-iframe w-full h-full"
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3653.9499357282057!2d-46.510364!3d-23.677748!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce69e73f9aa713%3A0xd664bb004c5e5108!2sAv.%20Dom%20Pedro%20I%2C%201553!5e0!3m2!1spt-BR!2sbr!4v1710000000000!5m2!1spt-BR!2sbr" 
-            width="100%" 
-            height="100%" 
             style="border:0;" 
             allowfullscreen="" 
             loading="lazy" 
