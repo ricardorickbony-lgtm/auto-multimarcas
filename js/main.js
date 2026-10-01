@@ -922,8 +922,8 @@ function initWhatsAppStatus(config) {
   // Horários oficiais sincronizados com a Ficha do Google
   const horaInicioSemana = typeof cfg.horaInicioSemana === 'number' ? cfg.horaInicioSemana : 8; // 08:00
   const horaFimSemana = typeof cfg.horaFimSemana === 'number' ? cfg.horaFimSemana : 18;       // 18:00
-  const horaInicioSabado = typeof cfg.horaInicioSabado === 'number' ? cfg.horaInicioSabado : 9; // 09:00
-  const horaFimSabado = typeof cfg.horaFimSabado === 'number' ? cfg.horaFimSabado : 14;       // 14:00
+  const horaInicioSabado = typeof cfg.horaInicioSabado === 'number' ? cfg.horaInicioSabado : 8; // 08:00
+  const horaFimSabado = typeof cfg.horaFimSabado === 'number' ? cfg.horaFimSabado : 15;       // 15:00
 
   const agora = new Date();
   const diaSemana = agora.getDay(); // 0 = Domingo, 1 = Segunda ... 6 = Sábado
@@ -938,60 +938,85 @@ function initWhatsAppStatus(config) {
     if (horaDecimal >= horaInicioSemana && horaDecimal < horaFimSemana) {
       isOnline = true;
       statusTexto = 'Estamos online agora';
-      statusBadgeGoogle = 'Google: Seg a Sex das 08h às 18h';
+      statusBadgeGoogle = 'Ficha Google: Seg-Sex 08h-18h | Sáb 08h-15h';
     } else {
       isOnline = false;
       statusTexto = 'Fora do Expediente';
-      statusBadgeGoogle = 'Plantão WhatsApp • Seg-Sex 08h-18h';
+      statusBadgeGoogle = 'Plantão WhatsApp • Seg-Sex 08h-18h | Sáb 08h-15h';
     }
   } 
-  // Sábado (dia 6): das 09h às 14h
+  // Sábado (dia 6): das 08h às 15h
   else if (diaSemana === 6) {
     if (horaDecimal >= horaInicioSabado && horaDecimal < horaFimSabado) {
       isOnline = true;
       statusTexto = 'Estamos online agora';
-      statusBadgeGoogle = 'Google: Sábados das 09h às 14h';
+      statusBadgeGoogle = 'Ficha Google: Sábados das 08h às 15h';
     } else {
       isOnline = false;
       statusTexto = 'Fora do Expediente';
-      statusBadgeGoogle = 'Plantão WhatsApp • Sáb 09h-14h';
+      statusBadgeGoogle = 'Plantão WhatsApp • Sáb 08h-15h';
     }
   } 
   // Domingo e Feriados (dia 0)
   else {
     isOnline = false;
     statusTexto = 'Plantão WhatsApp';
-    statusBadgeGoogle = 'Ficha do Google: Retorno Segunda às 08h';
+    statusBadgeGoogle = 'Ficha Google: Retorno Segunda às 08h';
   }
 
-  const linkEl = document.getElementById('wa-link');
-  const dotEl = document.getElementById('wa-status-dot');
-  const textEl = document.getElementById('wa-status-text');
+  // 1. Atualiza todos os textos de status do WhatsApp no DOM
+  document.querySelectorAll('#wa-status-text, .wa-status-text, #header-wa-status-text').forEach(el => {
+    el.textContent = statusTexto;
+  });
+
+  // 2. Atualiza badge de horários do Google
+  document.querySelectorAll('#wa-google-horario, .wa-google-horario').forEach(el => {
+    el.textContent = statusBadgeGoogle;
+  });
+
+  // 3. Atualiza pontos luminosos de status (pulsante verde / cinza)
+  document.querySelectorAll('#wa-status-dot, .wa-status-dot').forEach(el => {
+    el.className = isOnline ? 'wa-status-dot online' : 'wa-status-dot offline';
+  });
+
+  // 4. Atualiza horário institucional no topo
+  const topbarHorario = document.getElementById('topbar-horario');
+  if (topbarHorario) {
+    topbarHorario.textContent = 'Seg a Sex: 08:00 às 18:00 • Sáb: 08:00 às 15:00';
+  }
+
+  // 5. Atualiza todos os links do WhatsApp
+  const msgPadrao = encodeURIComponent(
+    isOnline 
+      ? `Olá! Vim pelo site da ${cfg.nome || 'loja'} e gostaria de falar com um consultor.` 
+      : `Olá! Vi os veículos no site fora do horário comercial da loja e gostaria de receber mais informações.`
+  );
+  const waUrl = `https://wa.me/${numero}?text=${msgPadrao}`;
+
+  document.querySelectorAll('#wa-link, #btn-floating-wa, #btn-wa-header').forEach(el => {
+    el.href = waUrl;
+    el.title = `Ficha do Google: Seg-Sex 08h às 18h | Sáb 08h às 15h (${statusTexto})`;
+    if (isOnline) {
+      el.classList.remove('offline-mode');
+    } else {
+      el.classList.add('offline-mode');
+    }
+  });
+
+  // 6. Atualiza badges 'Estamos Online' no cabeçalho
+  document.querySelectorAll('.live-online-badge').forEach(el => {
+    if (isOnline) {
+      el.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse inline-block"></span> <span>Estamos online agora</span>`;
+      el.className = 'live-online-badge text-[11px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full flex items-center gap-1.5 shadow-sm';
+    } else {
+      el.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-500 inline-block"></span> <span>Fora do Expediente</span>`;
+      el.className = 'live-online-badge text-[11px] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-0.5 rounded-full flex items-center gap-1.5 shadow-sm';
+    }
+  });
+
   const titleEl = document.querySelector('.wa-title');
-  const badgeGoogleEl = document.getElementById('wa-google-horario');
-
-  if (!linkEl || !dotEl || !textEl) return;
-
-  if (isOnline) {
-    linkEl.classList.remove('offline-mode');
-    dotEl.className = 'wa-status-dot online';
-    textEl.textContent = statusTexto; // Exatamente "Estamos online agora"
-    if (titleEl) titleEl.textContent = 'Falar no WhatsApp';
-    if (badgeGoogleEl) badgeGoogleEl.textContent = statusBadgeGoogle;
-    
-    linkEl.title = `Ficha do Google: Seg-Sex 08h às 18h | Sáb 09h às 14h (${statusTexto})`;
-    const msg = encodeURIComponent(`Olá! Vim pelo site da ${cfg.nome || 'loja'} e gostaria de falar com um consultor.`);
-    linkEl.href = `https://wa.me/${numero}?text=${msg}`;
-  } else {
-    linkEl.classList.add('offline-mode');
-    dotEl.className = 'wa-status-dot offline';
-    textEl.textContent = statusTexto;
-    if (titleEl) titleEl.textContent = 'Plantão WhatsApp';
-    if (badgeGoogleEl) badgeGoogleEl.textContent = statusBadgeGoogle;
-
-    linkEl.title = `Ficha do Google: Seg-Sex 08h-18h | Sáb 09h-14h (Deixe sua mensagem para o próximo atendimento)`;
-    const msg = encodeURIComponent(`Olá! Vi os veículos no site fora do horário comercial da loja e gostaria de receber mais informações.`);
-    linkEl.href = `https://wa.me/${numero}?text=${msg}`;
+  if (titleEl) {
+    titleEl.textContent = isOnline ? 'Falar no WhatsApp' : 'Plantão WhatsApp';
   }
 }
 
