@@ -315,13 +315,8 @@ function renderizarEstoque() {
 
 function criarCardCarro(carro) {
   const isDark = document.documentElement.classList.contains('dark');
+  const isMotors = document.body.dataset.template === 'motors';
   const div = document.createElement('div');
-  
-  if (isDark) {
-    div.className = 'luxury-card rounded-2xl overflow-hidden flex flex-col relative text-slate-200';
-  } else {
-    div.className = 'car-card bg-white rounded-2xl border border-slate-200 overflow-hidden flex flex-col relative';
-  }
 
   const precoFormatado = EstoqueDB.formatarPreco(carro.preco);
   const kmFormatado = EstoqueDB.formatarKm(carro.km);
@@ -340,12 +335,6 @@ function criarCardCarro(carro) {
     statusTexto = 'Vendido';
   }
 
-  const tagsHtml = (carro.tags || []).slice(0, 2).map(tag => 
-    isDark 
-      ? `<span class="bg-white/10 text-amber-300 text-[10px] font-semibold px-2 py-0.5 rounded border border-white/10">${tag}</span>`
-      : `<span class="bg-slate-100 text-slate-700 text-[10px] font-semibold px-2 py-0.5 rounded">${tag}</span>`
-  ).join('');
-
   const msgWhatsApp = encodeURIComponent(
     `Olá! Vi no site o veículo ${carro.marca} ${carro.modelo} (${carro.anoFabricacao}/${carro.anoModelo}) por ${precoFormatado} e gostaria de mais informações!`
   );
@@ -354,6 +343,114 @@ function criarCardCarro(carro) {
   const listaFotos = carro.fotos && carro.fotos.length > 0 ? carro.fotos : [carro.foto];
   const fotoCapa = listaFotos[0];
   const totalFotos = listaFotos.length;
+
+  // LAYOUT MOTORS / PORTAL CONCESSIONÁRIA (Estilo Valen Motors)
+  if (isMotors) {
+    div.className = 'motors-card bg-white rounded-xl border border-slate-200 overflow-hidden flex flex-col group cursor-pointer shadow-sm hover:shadow-lg transition-all';
+    div.setAttribute('data-ver-detalhes', carro.id);
+
+    div.innerHTML = `
+      <!-- Imagem do Veículo com Aspect Ratio 16:10 -->
+      <div class="relative w-full aspect-[16/10] bg-slate-900 overflow-hidden">
+        <img src="${fotoCapa}" alt="${carro.marca} ${carro.modelo}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy">
+        
+        <!-- Badges Superiores -->
+        <div class="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between pointer-events-none">
+          <span class="badge-status ${statusBadgeClass} text-[10px] py-0.5 px-2 font-bold shadow-sm">${statusTexto}</span>
+          ${carro.destaque ? '<span class="bg-amber-500 text-slate-950 font-black text-[10px] px-2 py-0.5 rounded shadow">★ DESTAQUE</span>' : ''}
+        </div>
+
+        <!-- Badge Contador de Fotos -->
+        ${totalFotos > 1 ? `
+          <div class="absolute bottom-2.5 right-2.5 bg-slate-950/75 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-0.5 rounded flex items-center gap-1 border border-white/20">
+            <svg class="w-3 h-3 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+            <span>${totalFotos} fotos</span>
+          </div>
+        ` : ''}
+
+        <!-- Selo de Vendido -->
+        ${isVendido ? `
+          <div class="card-vendido-overlay">
+            <div class="vendido-stamp">Vendido</div>
+          </div>
+        ` : ''}
+      </div>
+
+      <!-- Conteúdo do Card Concessionária -->
+      <div class="p-4 flex-1 flex flex-col justify-between">
+        <div>
+          <!-- Bloco de Preço Promocional (De / Por) -->
+          <div class="mb-2 flex items-baseline justify-between">
+            <div class="flex flex-col">
+              <span class="text-[11px] text-slate-400 line-through font-medium">De R$ ${EstoqueDB.formatarPreco(Math.round(carro.preco * 1.05))}</span>
+              <span class="text-xl font-black text-blue-700 tracking-tight leading-none">${precoFormatado}</span>
+            </div>
+            <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100">À Vista</span>
+          </div>
+
+          <!-- Título e Versão -->
+          <h3 class="font-bold text-slate-900 text-base leading-snug group-hover:text-blue-600 transition line-clamp-1" title="${carro.marca} ${carro.modelo}">
+            ${carro.marca} ${carro.modelo}
+          </h3>
+          <p class="text-xs text-slate-500 mt-0.5 line-clamp-1 font-medium">
+            ${carro.cor} • Placa final ${carro.placaFinal}
+          </p>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-slate-100">
+          <!-- Grade 2x2 de Especificações com Ícones (Câmbio, Combustível, Ano, Km) -->
+          <div class="grid grid-cols-2 gap-2 text-xs text-slate-600 mb-3.5">
+            <div class="flex items-center gap-1.5" title="Câmbio">
+              <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+              <span class="truncate">${carro.cambio}</span>
+            </div>
+            <div class="flex items-center gap-1.5" title="Combustível">
+              <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+              <span class="truncate">${carro.combustivel}</span>
+            </div>
+            <div class="flex items-center gap-1.5" title="Ano">
+              <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+              <span class="truncate">${carro.anoFabricacao}/${carro.anoModelo}</span>
+            </div>
+            <div class="flex items-center gap-1.5" title="Quilometragem">
+              <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+              <span class="truncate">${kmFormatado}</span>
+            </div>
+          </div>
+
+          <!-- Ações Rápidas -->
+          <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-100">
+            <button data-ver-detalhes="${carro.id}" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold py-2 rounded-lg text-center transition">
+              Ver Detalhes
+            </button>
+            ${!isVendido ? `
+              <a href="${linkWhatsApp}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation();" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold py-2 rounded-lg text-center transition flex items-center justify-center gap-1 shadow-sm">
+                <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 14.99 3.81 13.47 3.81 11.91C3.81 7.37 7.5 3.67 12.05 3.67Z"/></svg>
+                <span>WhatsApp</span>
+              </a>
+            ` : `
+              <span class="w-full bg-slate-100 text-slate-400 text-xs font-semibold py-2 rounded-lg text-center">Vendido</span>
+            `}
+          </div>
+        </div>
+      </div>
+    `;
+
+    return div;
+  }
+
+  // LAYOUT PADRÃO (Moderno & Luxo)
+  if (isDark) {
+    div.className = 'luxury-card rounded-2xl overflow-hidden flex flex-col relative text-slate-200';
+  } else {
+    div.className = 'car-card bg-white rounded-2xl border border-slate-200 overflow-hidden flex flex-col relative';
+  }
+
+  const tagsHtml = (carro.tags || []).slice(0, 2).map(tag => 
+    isDark 
+      ? `<span class="bg-white/10 text-amber-300 text-[10px] font-semibold px-2 py-0.5 rounded border border-white/10">${tag}</span>`
+      : `<span class="bg-slate-100 text-slate-700 text-[10px] font-semibold px-2 py-0.5 rounded">${tag}</span>`
+  ).join('');
 
   div.innerHTML = `
     <!-- Imagem e Badges -->
@@ -523,6 +620,24 @@ function configurarEventosFiltros() {
     });
   });
 
+  // Botões de Categoria Rápida (Pills do Template Motors)
+  const categoriaBtns = document.querySelectorAll('.btn-categoria-filtro');
+  categoriaBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      categoriaBtns.forEach(b => {
+        b.classList.remove('bg-slate-900', 'text-white', 'active');
+        b.classList.add('bg-slate-100', 'text-slate-700');
+      });
+      btn.classList.remove('bg-slate-100', 'text-slate-700');
+      btn.classList.add('bg-slate-900', 'text-white', 'active');
+
+      const cat = btn.dataset.categoria || '';
+      filtroAtual.carroceria = cat;
+      if (selectCarroceria) selectCarroceria.value = cat;
+      renderizarEstoque();
+    });
+  });
+
   // Botão Limpar Filtros
   if (btnLimpar) {
     btnLimpar.addEventListener('click', () => {
@@ -538,6 +653,15 @@ function configurarEventosFiltros() {
           b.classList.add(isDark ? 'bg-amber-400' : 'bg-slate-900', isDark ? 'text-black' : 'text-white');
         } else {
           b.classList.add('bg-white', 'text-slate-700');
+        }
+      });
+      categoriaBtns.forEach(b => {
+        const isTodos = !b.dataset.categoria;
+        b.classList.remove('bg-slate-900', 'text-white', 'active', 'bg-slate-100', 'text-slate-700');
+        if (isTodos) {
+          b.classList.add('bg-slate-900', 'text-white', 'active');
+        } else {
+          b.classList.add('bg-slate-100', 'text-slate-700');
         }
       });
       renderizarEstoque();
