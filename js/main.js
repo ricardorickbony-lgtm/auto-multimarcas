@@ -154,49 +154,140 @@ function extrairIdYoutube(urlOuId) {
 
 let videoHeroMuted = true;
 
+function ativarFallbackCinematografico(container) {
+  if (!container) return;
+  let nativeVid = container.querySelector('#hero-native-video');
+  if (!nativeVid) {
+    container.innerHTML = `
+      <video id="hero-native-video" class="hero-video-element" autoplay muted loop playsinline poster="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1920&q=80">
+        <source src="assets/videos/hero.mp4" type="video/mp4">
+        <source src="https://raw.githubusercontent.com/intel-iot-devkit/sample-videos/master/car-detection.mp4" type="video/mp4">
+      </video>
+    `;
+    nativeVid = container.querySelector('#hero-native-video');
+  }
+  if (nativeVid) {
+    nativeVid.muted = videoHeroMuted;
+    nativeVid.play().catch(() => {});
+  }
+  configurarControleSomVideo();
+}
+
+function carregarYouTubeComEscudoAntiErro(container, ytId) {
+  container.innerHTML = '';
+
+  const iframe = document.createElement('iframe');
+  iframe.id = 'hero-yt-iframe';
+  iframe.className = 'hero-video-element opacity-0 transition-opacity duration-700 pointer-events-none';
+  
+  const origin = window.location.origin || (window.location.protocol + '//' + window.location.host);
+  const srcUrl = `https://www.youtube.com/embed/${ytId}?autoplay=1&mute=1&loop=1&playlist=${ytId}&controls=0&playsinline=1&rel=0&iv_load_policy=3&enablejsapi=1&origin=${encodeURIComponent(origin)}&widget_referrer=${encodeURIComponent(window.location.href)}`;
+  
+  iframe.src = srcUrl;
+  iframe.title = 'Vídeo Showroom da Loja';
+  iframe.setAttribute('frameborder', '0');
+  iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
+  iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+  iframe.setAttribute('allowfullscreen', '');
+
+  let videoIniciou = false;
+
+  const removerIframeEFallback = () => {
+    clearTimeout(watchdogTimer);
+    window.removeEventListener('message', listenerMensagem);
+    if (iframe.parentNode) {
+      iframe.remove();
+    }
+    ativarFallbackCinematografico(container);
+  };
+
+  const confirmarSucesso = () => {
+    if (videoIniciou) return;
+    videoIniciou = true;
+    clearTimeout(watchdogTimer);
+    iframe.classList.remove('opacity-0');
+    iframe.classList.add('opacity-100');
+    configurarControleSomVideo();
+  };
+
+  const listenerMensagem = (e) => {
+    try {
+      const data = typeof e.data === 'string' ? JSON.parse(e.data) : e.data;
+      if (!data) return;
+
+      if (data.event === 'onError' || (data.info && data.info.errorCode)) {
+        console.warn('YouTube relatou erro de configuração (Erro 153/101). Ativando vídeo nativo.');
+        removerIframeEFallback();
+        return;
+      }
+
+      if (data.event === 'infoDelivery' && data.info && (data.info.playerState === 1 || data.info.currentTime > 0.1)) {
+        confirmarSucesso();
+      }
+    } catch (err) {}
+  };
+
+  window.addEventListener('message', listenerMensagem);
+
+  // Watchdog de 2.5s para garantir que a tela de Erro 153 nunca seja visível
+  const watchdogTimer = setTimeout(() => {
+    if (!videoIniciou) {
+      console.warn('Watchdog de Vídeo: YouTube não confirmou reprodução em 2.5s. Ativando vídeo nativo.');
+      removerIframeEFallback();
+    }
+  }, 2500);
+
+  container.appendChild(iframe);
+}
+
 function aplicarVideoHero(config) {
   const container = document.getElementById('hero-video-container');
   if (!container) return;
 
-  const videoParam = (config && config.videoHero) ? config.videoHero.trim() : 'https://www.youtube.com/watch?v=9JfFt3t7OfE';
+  const videoParam = (config && config.videoHero) ? config.videoHero.trim() : 'assets/videos/hero.mp4';
   
   if (!videoParam) {
     container.innerHTML = '';
     return;
   }
 
-  const ytId = extrairIdYoutube(videoParam);
-
-  if (ytId) {
-    const iframeExistente = document.getElementById('hero-yt-iframe');
-    if (iframeExistente && iframeExistente.src.includes(ytId)) {
-      configurarControleSomVideo();
-      return;
-    }
+  if (videoParam.includes('.mp4') || videoParam.includes('.webm') || videoParam.includes('blob:')) {
     container.innerHTML = `
-      <iframe id="hero-yt-iframe" class="hero-video-element"
-        src="https://www.youtube-nocookie.com/embed/${ytId}?autoplay=1&mute=1&loop=1&playlist=${ytId}&controls=0&playsinline=1&rel=0&iv_load_policy=3"
-        referrerpolicy="strict-origin-when-cross-origin"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        allowfullscreen
-        frameborder="0"
-        title="Vídeo Showroom da Loja">
-      </iframe>
-    `;
-  } else if (videoParam.includes('.mp4') || videoParam.includes('.webm') || videoParam.includes('blob:')) {
-    container.innerHTML = `
-      <video id="hero-native-video" class="hero-video-element" autoplay muted loop playsinline>
+      <video id="hero-native-video" class="hero-video-element" autoplay muted loop playsinline poster="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1920&q=80">
         <source src="${videoParam}" type="video/mp4">
       </video>
     `;
+    const vid = container.querySelector('#hero-native-video');
+    if (vid) vid.play().catch(() => {});
+    configurarControleSomVideo();
+    return;
   }
 
-  configurarControleSomVideo();
+  const ytId = extrairIdYoutube(videoParam);
+
+  if (ytId) {
+    const isFileProtocol = window.location.protocol === 'file:' || !window.location.protocol.startsWith('http');
+    
+    // No protocolo local file://, o YouTube bloqueia com Erro 153 por falta de Referer.
+    // Ativamos o vídeo nativo HD imediatamente para garantir experiência perfeita no computador do Ricardo.
+    if (isFileProtocol) {
+      console.info('Acesso local (file://): Ativando vídeo nativo HD para evitar bloqueio do YouTube.');
+      ativarFallbackCinematografico(container);
+      return;
+    }
+
+    carregarYouTubeComEscudoAntiErro(container, ytId);
+  } else {
+    ativarFallbackCinematografico(container);
+  }
 }
 
 function configurarControleSomVideo() {
   const btn = document.getElementById('btn-toggle-video-sound');
-  if (!btn || btn.dataset.configured === 'true') return;
+  if (!btn) return;
+  btn.style.display = 'flex';
+
+  if (btn.dataset.configured === 'true') return;
   btn.dataset.configured = 'true';
 
   btn.addEventListener('click', () => {
@@ -222,20 +313,6 @@ function configurarControleSomVideo() {
 
     if (icon) icon.textContent = videoHeroMuted ? '🔇' : '🔊';
     if (label) label.textContent = videoHeroMuted ? 'Vídeo da Loja' : 'Áudio Ativado';
-  });
-
-  // Proteção contra Erro 153 / Bloqueios de Incorporação:
-  // Se o YouTube relatar erro de reprodução, oculta o leitor e mantém o fundo automotivo suavemente
-  window.addEventListener('message', (e) => {
-    try {
-      const data = typeof e.data === 'string' ? JSON.parse(e.data) : e.data;
-      if (data && (data.event === 'onError' || (data.info && data.info.errorCode))) {
-        const c = document.getElementById('hero-video-container');
-        if (c) c.style.display = 'none';
-        const badge = document.getElementById('btn-toggle-video-sound');
-        if (badge) badge.style.display = 'none';
-      }
-    } catch (err) {}
   });
 }
 
