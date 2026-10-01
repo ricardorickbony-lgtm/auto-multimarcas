@@ -98,6 +98,32 @@ function aplicarIdentidadeLoja(config) {
 
   // 3. Vídeo Hero da Loja / Showroom em Alta Resolução
   aplicarVideoHero(config);
+
+  // 4. Redes Sociais Oficiais da Loja (Instagram, Facebook, TikTok, YouTube)
+  aplicarRedesSociais(config);
+}
+
+function aplicarRedesSociais(config) {
+  if (!config) return;
+  const mapa = {
+    instagram: config.instagram || '#',
+    facebook: config.facebook || '#',
+    tiktok: config.tiktok || '#',
+    youtube: config.youtube || '#'
+  };
+
+  Object.entries(mapa).forEach(([rede, url]) => {
+    const elementos = document.querySelectorAll(`[data-rede="${rede}"], .rede-${rede}`);
+    elementos.forEach(el => {
+      el.href = url;
+      if (url === '#' || !url) {
+        el.setAttribute('target', '_self');
+      } else {
+        el.setAttribute('target', '_blank');
+        el.setAttribute('rel', 'noopener noreferrer');
+      }
+    });
+  });
 }
 
 function extrairIdYoutube(urlOuId) {

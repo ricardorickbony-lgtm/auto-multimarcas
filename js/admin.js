@@ -554,6 +554,14 @@ function configurarConfigLoja() {
     if (inputGoogleAds) inputGoogleAds.value = config.googleAdsId || '';
     const inputPixelMeta = document.getElementById('config-pixel-meta');
     if (inputPixelMeta) inputPixelMeta.value = config.pixelMetaId || '';
+    const inputInstagram = document.getElementById('config-instagram');
+    if (inputInstagram) inputInstagram.value = config.instagram || '';
+    const inputFacebook = document.getElementById('config-facebook');
+    if (inputFacebook) inputFacebook.value = config.facebook || '';
+    const inputTiktok = document.getElementById('config-tiktok');
+    if (inputTiktok) inputTiktok.value = config.tiktok || '';
+    const inputYoutube = document.getElementById('config-youtube');
+    if (inputYoutube) inputYoutube.value = config.youtube || '';
     modal.classList.remove('hidden');
   };
 
@@ -579,6 +587,10 @@ function configurarConfigLoja() {
         videoHero: document.getElementById('config-video-hero')?.value.trim() || '',
         horarioSemana: document.getElementById('config-horario-semana')?.value.trim() || 'Segunda a Sexta: 08:00 às 18:00',
         horarioSabado: document.getElementById('config-horario-sabado')?.value.trim() || 'Sábados: 09:00 às 14:00',
+        instagram: document.getElementById('config-instagram')?.value.trim() || '',
+        facebook: document.getElementById('config-facebook')?.value.trim() || '',
+        tiktok: document.getElementById('config-tiktok')?.value.trim() || '',
+        youtube: document.getElementById('config-youtube')?.value.trim() || '',
         googleAdsId: document.getElementById('config-google-ads')?.value.trim() || '',
         pixelMetaId: document.getElementById('config-pixel-meta')?.value.trim() || ''
       };

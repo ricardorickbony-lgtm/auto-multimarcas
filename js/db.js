@@ -27,6 +27,10 @@ const CONFIG_LOJA_PADRAO = {
   fotoFachada: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1920&q=80',
   fotoShowroom: 'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=1920&q=80',
   videoHero: 'https://www.youtube.com/watch?v=9JfFt3t7OfE', // Vídeo de Apresentação Automotiva em Alta Resolução
+  instagram: 'https://instagram.com',
+  facebook: 'https://facebook.com',
+  tiktok: 'https://tiktok.com',
+  youtube: 'https://youtube.com',
   webhookMarketplaces: '',
   googleAdsId: '',
   pixelMetaId: ''
